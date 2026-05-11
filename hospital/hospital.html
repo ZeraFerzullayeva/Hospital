@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>MedPlus Xəstəxanası</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,800;1,300;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ================================================================
+   MedPlus Xəstəxanası — style.css
+   Palitra: Dərin göy-yaşıl + qızılı + açıq krem/şaftalı
+================================================================ */
+
+/* ----------------------------------------------------------------
+   CSS DEĞİŞKƏNLƏRİ
+---------------------------------------------------------------- */
+:root {
+  /* Ana rənglər */
+  --forest:    #0f2e2e;   /* ən tünd — header, dark sections   */
+  --pine:      #164e3e;   /* ikinci tünd                        */
+  --jade:      #1a6b5a;   /* əsas teal-yaşıl                   */
+  --jade2:     #22897a;   /* açıq jade                         */
+  --sage:      #4db89e;   /* accent yaşıl                      */
+
+  /* İsti vurğular */
+  --amber:     #d97706;   /* qızılı-narıncı                    */
+  --amber2:    #f59e0b;   /* açıq qızılı                       */
+  --peach:     #fed7aa;   /* şaftalı-krem                      */
+
+  /* Fon rəngləri */
+  --bg-main:   #fdf6ee;   /* ana fon — isti krem               */
+  --bg-alt:    #fef3e2;   /* alternativ fon                    */
+  --bg-card:   #ffffff;
+  --bg-dark:   var(--forest);
+
+  /* Mətn */
+  --ink:       #1a1f2e;
+  --ink2:      #3d4a5c;
+  --muted:     #7a8899;
+  --light-txt: rgba(255,255,255,0.7);
+
+  /* Xəta / uğur */
+  --red:       #dc2626;
+  --green-ok:  #16a34a;
+
+  /* Kölgə & radius */
+  --sh-s: 0 2px 10px rgba(15,46,46,.07);
+  --sh-m: 0 8px 28px rgba(15,46,46,.12);
+  --sh-l: 0 20px 56px rgba(15,46,46,.16);
+  --r:    14px;
+}
+
+/* ----------------------------------------------------------------
+   RESET & BASE
+---------------------------------------------------------------- */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family:'Plus Jakarta Sans', sans-serif;
+  background: var(--bg-main);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:var(--bg-alt); }
+::-webkit-scrollbar-thumb { background:var(--jade); border-radius:3px; }
+
+/* ================================================================
+   ANIMASIYALAR
+================================================================ */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(22px); }
+  to   { opacity:1; transform:none; }
+}
+@keyframes slideIn {
+  from { opacity:0; transform:translateY(-10px); }
+  to   { opacity:1; transform:none; }
+}
+@keyframes shimmer {
+  0%   { background-position:-300% 0; }
+  100% { background-position: 300% 0; }
+}
+@keyframes floatBob {
+  0%,100% { transform:translateY(0) scale(1); }
+  50%     { transform:translateY(-12px) scale(1.04); }
+}
+@keyframes pulse {
+  0%,100% { opacity:.5; }
+  50%     { opacity:1; }
+}
+@keyframes orbMove {
+  0%,100% { transform:translate(0,0) scale(1); }
+  33%     { transform:translate(20px,-15px) scale(1.05); }
+  66%     { transform:translate(-10px,20px) scale(.95); }
+}
+
+/* ================================================================
+   REKLAM SLİDER
+================================================================ */
+.ad-slider {
+  position:relative;
+  overflow:hidden;
+  height:260px;
+}
+
+.ad-slide {
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transition:opacity .7s ease;
+  display:flex;
+  align-items:center;
+}
+
+.ad-slide.active { opacity:1; }
+
+.ad-content {
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 48px;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:32px;
+}
+
+.ad-text { flex:1; }
+
+.ad-tag {
+  display:inline-block;
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.3);
+  color:#fff;
+  font-size:11.5px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  padding:4px 14px;
+  border-radius:100px;
+  margin-bottom:12px;
+}
+
+.ad-text h2 {
+  font-family:'Fraunces', serif;
+  font-size:clamp(24px,3.5vw,40px);
+  color:#fff;
+  line-height:1.15;
+  margin-bottom:10px;
+  font-weight:800;
+}
+
+.ad-text h2 em { font-style:italic; color:var(--peach); }
+
+.ad-text p {
+  color:rgba(255,255,255,.75);
+  font-size:14px;
+  line-height:1.65;
+  max-width:420px;
+  margin-bottom:18px;
+}
+
+.ad-cta {
+  background:#fff;
+  color:var(--ink);
+  border:none;
+  padding:11px 24px;
+  border-radius:100px;
+  font-size:13.5px;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+}
+.ad-cta:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.25); }
+
+.ad-visual {
+  position:relative;
+  width:160px;
+  height:160px;
+  flex-shrink:0;
+}
+
+.ad-icon-wrap {
+  width:140px;
+  height:140px;
+  background:rgba(255,255,255,.12);
+  border:2px solid rgba(255,255,255,.2);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:64px;
+  animation:floatBob 4s ease-in-out infinite;
+}
+
+.ad-badge-float {
+  position:absolute;
+  bottom:0;
+  right:0;
+  background:var(--amber2);
+  color:var(--ink);
+  font-size:9.5px;
+  font-weight:800;
+  letter-spacing:.5px;
+  padding:4px 10px;
+  border-radius:100px;
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+/* Arrows */
+.ad-arrow {
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.25);
+  color:#fff;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  font-size:20px;
+  cursor:pointer;
+  transition:all .2s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+}
+.ad-arrow:hover { background:rgba(255,255,255,.3); }
+.ad-prev { left:16px; }
+.ad-next { right:16px; }
+
+/* Dots */
+.ad-dots {
+  position:absolute;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:7px;
+}
+.ad-dot {
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:rgba(255,255,255,.35);
+  cursor:pointer;
+  transition:all .25s;
+}
+.ad-dot.on { background:#fff; width:20px; border-radius:4px; }
+
+/* ================================================================
+   SECTION 1 — HEADER
+================================================================ */
+#s1 {
+  background: var(--forest);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Info bar */
+.info-bar {
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
+  align-items:center;
+  padding:9px 40px;
+  background:rgba(255,255,255,.04);
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.ii {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:rgba(255,255,255,.58);
+  font-size:12.5px;
+}
+.ii span { color:var(--sage); font-size:14px; }
+
+/* ----------------------------------------------------------------
+   NAVBAR + DROPDOWN
+---------------------------------------------------------------- */
+.navbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 40px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  position:relative;
+  z-index:100;
+}
+
+.logo { display:flex; align-items:center; gap:12px; }
+
+.logo-icon {
+  width:42px;
+  height:42px;
+  background:var(--jade);
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:19px;
+  box-shadow:0 4px 16px rgba(26,107,90,.4);
+}
+
+.logo-txt h1 {
+  font-family:'Fraunces', serif;
+  font-size:21px;
+  color:#fff;
+  font-weight:800;
+  line-height:1;
+}
+.logo-txt span {
+  font-size:10px;
+  color:var(--sage);
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+
+/* Nav links + dropdown */
+.nav-links {
+  display:flex;
+  gap:4px;
+  list-style:none;
+}
+
+.nav-item {
+  position:relative;
+}
+
+.nav-item > a {
+  display:block;
+  color:rgba(255,255,255,.65);
+  text-decoration:none;
+  font-size:13.5px;
+  font-weight:500;
+  padding:8px 14px;
+  border-radius:8px;
+  transition:all .2s;
+}
+
+.nav-item > a:hover {
+  color:#fff;
+  background:rgba(255,255,255,.08);
+}
+
+/* Dropdown panel */
+.nav-drop {
+  position:absolute;
+  top:calc(100% + 10px);
+  left:50%;
+  transform:translateX(-50%) translateY(-8px);
+  width:280px;
+  background:#fff;
+  border-radius:14px;
+  box-shadow:var(--sh-l);
+  opacity:0;
+  pointer-events:none;
+  transition:all .25s ease;
+  z-index:200;
+  border:1px solid rgba(15,46,46,.08);
+}
+
+.nav-item:hover .nav-drop {
+  opacity:1;
+  pointer-events:all;
+  transform:translateX(-50%) translateY(0);
+  animation:slideIn .25s ease;
+}
+
+.wide-drop { width:380px; }
+
+.drop-inner { padding:22px; }
+
+.drop-title {
+  font-family:'Fraunces', serif;
+  font-size:16px;
+  font-weight:600;
+  color:var(--forest);
+  margin-bottom:8px;
+}
+
+.drop-inner p {
+  color:var(--ink2);
+  font-size:13px;
+  line-height:1.65;
+  margin-bottom:12px;
+}
+
+.drop-link {
+  color:var(--jade);
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-block;
+  margin-top:4px;
+}
+.drop-link:hover { color:var(--amber); }
+
+.drop-stats {
+  display:flex;
+  gap:16px;
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid #eee;
+}
+.drop-stats > div {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.drop-stats strong {
+  font-family:'Fraunces', serif;
+  font-size:20px;
+  color:var(--jade);
+  font-weight:800;
+}
+.drop-stats span {
+  font-size:11px;
+  color:var(--muted);
+  text-align:center;
+}
+
+.drop-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:8px;
+}
+.drop-svc {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:12.5px;
+  color:var(--ink2);
+  padding:6px 8px;
+  border-radius:8px;
+  background:var(--bg-alt);
+  font-weight:500;
+}
+
+.drop-contact {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:8px;
+}
+.drop-contact > div {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:13px;
+  color:var(--ink2);
+}
+.drop-contact > div strong { color:var(--forest); }
+.drop-contact span { font-size:16px; }
+
+/* ----------------------------------------------------------------
+   HERO
+---------------------------------------------------------------- */
+.hero {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:56px 32px;
+  text-align:center;
+  position:relative;
+}
+
+/* Dekorativ kürələr */
+.hero-bg-orb {
+  position:absolute;
+  border-radius:50%;
+  filter:blur(60px);
+  opacity:.25;
+  pointer-events:none;
+  animation:orbMove 12s ease-in-out infinite;
+}
+.orb1 { width:400px; height:400px; background:var(--jade); top:-80px; left:-80px; animation-delay:0s; }
+.orb2 { width:300px; height:300px; background:var(--amber); top:30%; right:-60px; animation-delay:-4s; }
+.orb3 { width:350px; height:350px; background:#6b21a8; bottom:-60px; left:30%; animation-delay:-8s; }
+
+.hero-tag {
+  display:inline-block;
+  background:rgba(77,184,158,.15);
+  border:1px solid rgba(77,184,158,.35);
+  color:var(--sage);
+  font-size:11px;
+  letter-spacing:3.5px;
+  text-transform:uppercase;
+  padding:5px 16px;
+  border-radius:100px;
+  margin-bottom:22px;
+  position:relative;
+  z-index:1;
+}
+
+.hero-h {
+  font-family:'Fraunces', serif;
+  font-size:clamp(34px,5.5vw,62px);
+  color:#fff;
+  line-height:1.12;
+  margin-bottom:14px;
+  max-width:740px;
+  font-weight:800;
+  position:relative;
+  z-index:1;
+}
+.hero-h em { font-style:italic; color:var(--amber2); }
+
+.hero-sub {
+  color:rgba(255,255,255,.5);
+  font-size:15px;
+  max-width:460px;
+  margin-bottom:48px;
+  line-height:1.75;
+  position:relative;
+  z-index:1;
+}
+
+.dept-label {
+  font-size:10.5px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--amber2);
+  margin-bottom:14px;
+  position:relative;
+  z-index:1;
+}
+
+.dept-btns {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  max-width:860px;
+  position:relative;
+  z-index:1;
+}
+
+.dbtn {
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.82);
+  padding:11px 20px;
+  border-radius:100px;
+  cursor:pointer;
+  font-size:13.5px;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  font-weight:500;
+  transition:all .25s;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.dbtn:hover, .dbtn.sel {
+  background:var(--jade);
+  border-color:var(--jade);
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(26,107,90,.38);
+}
+
+.scroll-hint {
+  text-align:center;
+  color:rgba(255,255,255,.22);
+  font-size:11.5px;
+  padding:14px;
+  animation:pulse 2.5s infinite;
+  position:relative;
+  z-index:1;
+}
+
+/* ================================================================
+   SECTION GÖRÜNÜRLÜK
+================================================================ */
+section { display:none; }
+.sec-visible { display:flex; flex-direction:column; }
+section.on { display:block; animation:fadeUp .45s ease; }
+
+/* Bölmə fon rəngləri */
+#s2 { background:var(--bg-alt);  padding:60px 36px; }
+#s3 { background:var(--bg-card); padding:60px 36px; }
+#s4 { background:var(--forest);  padding:60px 36px; }
+#s5 { background:var(--bg-main); padding:60px 36px; }
+#s6 { background:var(--pine);    padding:60px 36px; }
+
+/* ----------------------------------------------------------------
+   Shared layout helpers
+---------------------------------------------------------------- */
+.inner { max-width:1100px; margin:0 auto; }
+
+/* Section header */
+.sec-head { text-align:center; margin-bottom:44px; }
+.sec-tag {
+  font-size:10.5px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--jade);
+  font-weight:600;
+  margin-bottom:10px;
+}
+.sec-head h2 {
+  font-family:'Fraunces', serif;
+  font-size:36px;
+  color:var(--ink);
+  font-weight:700;
+}
+
+/* Back buttons */
+.back-btn {
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:transparent;
+  border:1.5px solid rgba(15,46,46,.2);
+  color:var(--ink2);
+  padding:7px 16px;
+  border-radius:100px;
+  font-size:12.5px;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  cursor:pointer;
+  transition:all .2s;
+  margin-bottom:28px;
+}
+.back-btn:hover { border-color:var(--jade); color:var(--jade); background:rgba(26,107,90,.06); }
+
+.light-back {
+  border-color:rgba(255,255,255,.18);
+  color:rgba(255,255,255,.55);
+}
+.light-back:hover { border-color:var(--sage); color:var(--sage); background:rgba(77,184,158,.08); }
+
+/* ================================================================
+   SECTION 2 — ŞÖBƏ KARTları
+================================================================ */
+.dept-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(190px,1fr));
+  gap:18px;
+}
+
+.dept-card {
+  background:var(--bg-card);
+  border:2px solid transparent;
+  border-radius:var(--r);
+  padding:28px 18px;
+  text-align:center;
+  cursor:pointer;
+  transition:all .25s;
+  box-shadow:var(--sh-s);
+}
+.dept-card:hover, .dept-card.sel {
+  border-color:var(--jade);
+  transform:translateY(-4px);
+  box-shadow:var(--sh-m);
+}
+.dept-card .di { font-size:34px; margin-bottom:10px; display:block; }
+.dept-card h3 { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:5px; }
+.dept-card p  { font-size:11.5px; color:var(--muted); line-height:1.5; }
+
+/* ================================================================
+   SECTION 3 — HƏKİM KARTları
+================================================================ */
+.doc-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(200px,1fr));
+  gap:22px;
+}
+
+.doc-card {
+  background:var(--bg-alt);
+  border-radius:var(--r);
+  overflow:hidden;
+  cursor:pointer;
+  transition:all .25s;
+  border:2px solid transparent;
+  box-shadow:var(--sh-s);
+}
+.doc-card:hover, .doc-card.sel {
+  border-color:var(--jade);
+  transform:translateY(-4px);
+  box-shadow:var(--sh-m);
+}
+
+.doc-ava {
+  height:120px;
+  background:linear-gradient(135deg, var(--jade) 0%, var(--forest) 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+}
+
+.doc-info { padding:14px 15px; }
+.doc-info h3 { font-size:13.5px; font-weight:600; color:var(--ink); margin-bottom:3px; }
+.doc-info .sp { font-size:11.5px; color:var(--jade); font-weight:500; margin-bottom:5px; }
+.doc-info .ex { font-size:11.5px; color:var(--muted); }
+
+/* ================================================================
+   SECTION 4 — HƏKİM PROFİLİ
+================================================================ */
+.prof-wrap {
+  display:grid;
+  grid-template-columns:270px 1fr;
+  gap:44px;
+  align-items:start;
+}
+
+.prof-l {
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:var(--r);
+  padding:28px;
+  text-align:center;
+}
+
+.prof-ava { font-size:66px; margin-bottom:14px; display:block; }
+
+.prof-l h2 {
+  font-family:'Fraunces', serif;
+  font-size:20px;
+  color:#fff;
+  margin-bottom:5px;
+  font-weight:700;
+}
+
+.spec-badge {
+  background:var(--jade);
+  color:#fff;
+  padding:3px 12px;
+  border-radius:100px;
+  font-size:11.5px;
+  font-weight:600;
+  display:inline-block;
+  margin-bottom:16px;
+}
+
+.pstat {
+  display:flex;
+  justify-content:space-between;
+  padding:9px 0;
+  border-top:1px solid rgba(255,255,255,.07);
+  font-size:12.5px;
+  color:rgba(255,255,255,.5);
+}
+.pstat strong { color:#fff; }
+
+.prof-r h3 {
+  font-family:'Fraunces', serif;
+  font-size:26px;
+  color:#fff;
+  margin-bottom:12px;
+  font-weight:700;
+}
+.prof-r p {
+  color:rgba(255,255,255,.58);
+  line-height:1.85;
+  margin-bottom:22px;
+  font-size:14.5px;
+}
+
+.edu-row { display:flex; gap:12px; margin-bottom:12px; }
+.edu-dot { width:9px; height:9px; background:var(--sage); border-radius:50%; margin-top:5px; flex-shrink:0; }
+.edu-row h4 { color:#fff; font-size:13.5px; margin-bottom:2px; }
+.edu-row span { color:rgba(255,255,255,.4); font-size:11.5px; }
+
+.pick-btn {
+  margin-top:24px;
+  background:var(--jade);
+  color:#fff;
+  border:none;
+  padding:13px 28px;
+  border-radius:100px;
+  font-size:14px;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .25s;
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+}
+.pick-btn:hover { background:var(--jade2); transform:translateY(-2px); box-shadow:0 8px 22px rgba(26,107,90,.4); }
+
+/* ================================================================
+   SECTION 5 — NÖVBƏ SİSTEMİ
+================================================================ */
+.sched-wrap {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+}
+
+.scard {
+  background:var(--bg-card);
+  border-radius:var(--r);
+  padding:26px;
+  box-shadow:var(--sh-s);
+}
+.scard h3 {
+  font-family:'Fraunces', serif;
+  font-size:19px;
+  color:var(--ink);
+  margin-bottom:16px;
+  padding-bottom:10px;
+  border-bottom:2px solid var(--bg-alt);
+  font-weight:700;
+}
+
+/* Qrafik sıraları */
+.tslot {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:9px 0;
+  border-bottom:1px solid var(--bg-alt);
+  font-size:12.5px;
+  flex-wrap:wrap;
+  gap:4px;
+}
+.tslot:last-child { border-bottom:none; }
+.tday  { font-weight:600; color:var(--ink); min-width:115px; }
+.ttime { color:var(--muted); font-size:12px; }
+.tbadge {
+  font-size:10.5px;
+  padding:2px 9px;
+  border-radius:100px;
+  font-weight:600;
+}
+.t-open { background:#d1fae5; color:#065f46; }
+.t-busy { background:#fee2e2; color:#991b1b; }
+
+/* Form section titles */
+.fsec {
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  color:var(--jade);
+  margin:15px 0 9px;
+  padding-bottom:6px;
+  border-bottom:1.5px solid var(--bg-alt);
+}
+
+/* Form groups */
+.fg { margin-bottom:11px; }
+.fg label {
+  display:block;
+  font-size:11px;
+  font-weight:600;
+  color:var(--ink);
+  margin-bottom:4px;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+}
+.fg label small { font-size:9.5px; color:var(--muted); text-transform:none; font-weight:400; }
+
+.fg input, .fg select, .fg textarea {
+  width:100%;
+  padding:9px 13px;
+  border:1.5px solid #dde3eb;
+  border-radius:9px;
+  font-size:13px;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  color:var(--ink);
+  background:var(--bg-alt);
+  transition:border-color .2s, background .2s;
+  outline: none;
+  resize: none !important;
+}
+
+
+.fg input:focus, .fg select:focus, .fg textarea:focus {
+  border-color:var(--jade);
+  background:#fff;
+}
+.fg input.err { border-color:var(--red) !important; background:#fff8f8; }
+
+/* Error messages */
+.emsg {
+  display:block;
+  font-size:10.5px;
+  color:var(--red);
+  margin-top:3px;
+  min-height:13px;
+}
+
+/* DOB row */
+.dob-row { display:flex; gap:9px; }
+.dob-p   { flex:1; }
+
+/* Priority note */
+.prio-note {
+  background:linear-gradient(135deg,#fef9ec,#fef3c7);
+  border:1px solid #f59e0b;
+  border-radius:9px;
+  padding:11px 13px;
+  margin-bottom:7px;
+  font-size:12px;
+  color:#78350f;
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  line-height:1.55;
+}
+
+/* Priority checkbox */
+.cb-row {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:13.5px;
+  cursor:pointer;
+  font-weight:500;
+}
+.cb-row input[type=checkbox] { width:17px; height:17px; cursor:pointer; accent-color:var(--jade); }
+
+.pbadge {
+  background:var(--red);
+  color:#fff;
+  font-size:9.5px;
+  padding:2px 7px;
+  border-radius:100px;
+  font-weight:700;
+  margin-left:3px;
+}
+
+/* Priority doc input */
+.prio-input-wrap { margin-top:7px; }
+.prio-input-wrap input {
+  width:100%;
+  padding:9px 13px;
+  border:1.5px dashed var(--amber);
+  border-radius:9px;
+  font-size:13px;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  background:#fffdf5;
+  color:var(--ink);
+  outline:none;
+  transition:border-color .2s;
+}
+.prio-input-wrap input:focus { border-color:var(--jade); border-style:solid; background:#fff; }
+.prio-input-wrap input.err   { border-color:var(--red); background:#fff8f8; }
+
+/* Queue result */
+.q-result {
+  display:none;
+  text-align:center;
+  padding:22px;
+  background:linear-gradient(135deg, var(--jade), var(--forest));
+  border-radius:var(--r);
+  color:#fff;
+  margin:12px 0;
+  animation:fadeUp .4s ease;
+}
+.q-result.show { display:block; }
+.q-num {
+  font-family:'Fraunces', serif;
+  font-size:52px;
+  font-weight:800;
+  line-height:1;
+}
+.q-result p { font-size:12.5px; opacity:.75; margin-top:5px; }
+
+/* Submit button */
+.sub-btn {
+  width:100%;
+  background:var(--forest);
+  color:#fff;
+  border:none;
+  padding:14px;
+  border-radius:11px;
+  font-size:14.5px;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .25s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  margin-top:5px;
+}
+.sub-btn:hover { background:var(--jade); transform:translateY(-2px); box-shadow:0 8px 22px rgba(26,107,90,.3); }
+
+/* ================================================================
+   SECTION 6 — RƏY / ŞİKAYƏT
+================================================================ */
+.fb-wrap {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+  max-width:1100px;
+  margin:0 auto;
+}
+
+.fb-card {
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--r);
+  padding:32px;
+}
+.fb-card h3 {
+  font-family:'Fraunces', serif;
+  font-size:21px;
+  color:#fff;
+  margin-bottom:5px;
+  font-weight:700;
+}
+.fb-sub { color:rgba(255,255,255,.42); font-size:12.5px; margin-bottom:20px; }
+
+/* Stars */
+.stars { display:flex; gap:7px; margin-bottom:16px; }
+.star { font-size:25px; cursor:pointer; transition:transform .15s; filter:grayscale(1); opacity:.35; }
+.star:hover, .star.on { filter:none; opacity:1; transform:scale(1.18); }
+
+/* Feedback type */
+.ftype-row { display:flex; gap:9px; margin-bottom:14px; }
+.ftype-btn {
+  flex:1;
+  padding:9px;
+  border-radius:9px;
+  border:1.5px solid rgba(255,255,255,.13);
+  background:transparent;
+  color:rgba(255,255,255,.55);
+  font-size:12.5px;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  cursor:pointer;
+  transition:all .2s;
+  font-weight:500;
+}
+.ftype-btn:hover { border-color:rgba(255,255,255,.35); }
+.active-pos { background:var(--green-ok); border-color:var(--green-ok) !important; color:#fff !important; }
+.active-neg { background:var(--red); border-color:var(--red) !important; color:#fff !important; }
+
+/* Dark inputs */
+.di {
+  width:100%;
+  padding:10px 13px;
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(255,255,255,.11);
+  border-radius:9px;
+  color:#000000;
+  font-size:13px;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  margin-bottom:11px;
+  outline:none;
+  transition:border-color .2s;
+  resize:none;
+  overflow:auto;
+}
+.di::placeholder { color:rgba(255,255,255,.28); }
+.di:focus { border-color:var(--sage); }
+
+/* Send button */
+.send-btn {
+  width:100%;
+  padding:13px;
+  background:var(--jade);
+  color:#fff;
+  border:none;
+  border-radius:11px;
+  font-size:14px;
+  font-family:'Plus Jakarta Sans', sans-serif;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .25s;
+}
+.send-btn:hover { background:var(--jade2); transform:translateY(-2px); }
+.red-btn { background:var(--red) !important; }
+.red-btn:hover { background:#b91c1c !important; }
+
+/* OK message */
+.ok-box { display:none; text-align:center; padding:18px; color:#fff; animation:fadeUp .4s ease; }
+.ok-box.show { display:block; }
+.ok-ico { font-size:42px; margin-bottom:7px; }
+.ok-box h4 { font-family:'Fraunces', serif; font-size:19px; font-weight:700; }
+.ok-box p  { color:rgba(255,255,255,.45); font-size:12.5px; margin-top:4px; }
+
+/* ================================================================
+   RESPONSİV
+================================================================ */
+@media(max-width:900px) {
+  .prof-wrap   { grid-template-columns:1fr; }
+  .sched-wrap  { grid-template-columns:1fr; }
+  .fb-wrap     { grid-template-columns:1fr; }
+  .ad-visual   { display:none; }
+}
+
+@media(max-width:720px) {
+  .navbar      { flex-direction:column; gap:14px; padding:16px; }
+  .nav-links   { flex-wrap:wrap; justify-content:center; gap:6px; }
+  .info-bar    { padding:9px 16px; gap:12px; }
+  .hero        { padding:36px 14px; }
+  #s2,#s3,#s4,#s5,#s6 { padding:48px 14px; }
+  .dob-row     { flex-direction:column; }
+  .ad-slider   { height:200px; }
+  .ad-content  { padding:0 40px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     REKLAM SLİDER
+═══════════════════════════════════════════════ -->
+<div class="ad-slider" id="adSlider">
+  <div class="ad-slide active" style="background:linear-gradient(120deg,#1a0533 0%,#6b21a8 50%,#c026d3 100%)">
+    <div class="ad-content">
+      <div class="ad-text">
+        <span class="ad-tag">🎁 Xüsusi Təklif</span>
+        <h2>Pulsuz <em>İlkin Müayinə</em></h2>
+        <p>İlk dəfə gələn pasientlər üçün ümumi həkim müayinəsi tamamilə pulsuzdur.</p>
+        <button class="ad-cta" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">İndi Növbə Al →</button>
+      </div>
+      <div class="ad-visual">
+        <div class="ad-icon-wrap">🩺</div>
+        <div class="ad-badge-float">100% PULSUZ</div>
+      </div>
+    </div>
+  </div>
+  <div class="ad-slide" style="background:linear-gradient(120deg,#052e16 0%,#166534 50%,#16a34a 100%)">
+    <div class="ad-content">
+      <div class="ad-text">
+        <span class="ad-tag">❤️ Kardiologiya</span>
+        <h2>Ürəyinizi <em>Yoxlatdırın</em></h2>
+        <p>EKQ + ExoKQ + Holter paketi — erkən diaqnostika ilə ürək xəstəliklərindən qorunun.</p>
+        <button class="ad-cta" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">Paketə Bax →</button>
+      </div>
+      <div class="ad-visual">
+        <div class="ad-icon-wrap">❤️</div>
+        <div class="ad-badge-float">YENİ PAKET</div>
+      </div>
+    </div>
+  </div>
+  <div class="ad-slide" style="background:linear-gradient(120deg,#431407 0%,#c2410c 50%,#f97316 100%)">
+    <div class="ad-content">
+      <div class="ad-text">
+        <span class="ad-tag">👶 Pediatriya</span>
+        <h2>Uşağınız üçün <em>Ən Yaxşı Qulluq</em></h2>
+        <p>0–18 yaş aralığı üçün tam pediatrik müayinə paketi. Vaksinasiya və inkişaf monitorinqi.</p>
+        <button class="ad-cta" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">Ətraflı →</button>
+      </div>
+      <div class="ad-visual">
+        <div class="ad-icon-wrap">👶</div>
+        <div class="ad-badge-float">AİLƏ PROQRAMı</div>
+      </div>
+    </div>
+  </div>
+  <div class="ad-slide" style="background:linear-gradient(120deg,#1e1b4b 0%,#4338ca 50%,#818cf8 100%)">
+    <div class="ad-content">
+      <div class="ad-text">
+        <span class="ad-tag">🧠 Nevrologiya</span>
+        <h2>Baş Ağrısından <em>Xilas Olun</em></h2>
+        <p>Migren, klaster baş ağrısı — mütəxəssis nevroloqlarımız ilə müalicə proqramı.</p>
+        <button class="ad-cta" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">Müraciət Et →</button>
+      </div>
+      <div class="ad-visual">
+        <div class="ad-icon-wrap">🧠</div>
+        <div class="ad-badge-float">24/7 KONSULTASIYA</div>
+      </div>
+    </div>
+  </div>
+  <!-- Naviqasiya nöqtələri -->
+  <div class="ad-dots" id="adDots"></div>
+  <button class="ad-arrow ad-prev" onclick="adNav(-1)">‹</button>
+  <button class="ad-arrow ad-next" onclick="adNav(1)">›</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 1 — HEADER / MENYU
+═══════════════════════════════════════════════ -->
+<section id="s1" class="sec-visible">
+
+  <!-- Məlumat paneli -->
+  <div class="info-bar">
+    <div class="ii"><span>📍</span> Neftçilər pr. 45, Bakı</div>
+    <div class="ii"><span>📞</span> +994 12 555-00-00</div>
+    <div class="ii"><span>⏰</span> B.e–Şənb: 08:00–20:00</div>
+    <div class="ii"><span>🚨</span> Təcili: +994 12 555-01-01</div>
+    <div class="ii"><span>📧</span> info@medplus.az</div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <div class="logo-icon">🏥</div>
+      <div class="logo-txt">
+        <h1>MedPlus</h1>
+        <span>Xəstəxanası</span>
+      </div>
+    </div>
+
+    <ul class="nav-links">
+      <li class="nav-item">
+        <a href="#">Ana Səhifə</a>
+        <div class="nav-drop">
+          <div class="drop-inner">
+            <p class="drop-title">MedPlus Xəstəxanası</p>
+            <p>Bakının ən müasir tibb mərkəzi. 8 ixtisas şöbəsi, 100+ mütəxəssis həkim.</p>
+            <a class="drop-link" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">Şöbələrə bax →</a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a href="#">Haqqımızda</a>
+        <div class="nav-drop">
+          <div class="drop-inner">
+            <p class="drop-title">Haqqımızda</p>
+            <p>1998-ci ildən fəaliyyət göstərən MedPlus, 25+ illik təcrübə ilə Azərbaycanda sağlamlıq sahəsinin lideridır.</p>
+            <div class="drop-stats">
+              <div><strong>25+</strong><span>İl Təcrübə</span></div>
+              <div><strong>100+</strong><span>Mütəxəssis</span></div>
+              <div><strong>500k+</strong><span>Pasient</span></div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a href="#">Xidmətlər</a>
+        <div class="nav-drop wide-drop">
+          <div class="drop-inner">
+            <p class="drop-title">Xidmətlərimiz</p>
+            <div class="drop-grid">
+              <div class="drop-svc"><span>❤️</span> Kardiologiya</div>
+              <div class="drop-svc"><span>🧠</span> Nevrologiya</div>
+              <div class="drop-svc"><span>🦴</span> Ortopediya</div>
+              <div class="drop-svc"><span>👶</span> Pediatriya</div>
+              <div class="drop-svc"><span>👁️</span> Oftalmologiya</div>
+              <div class="drop-svc"><span>🩺</span> Cərrahiyyə</div>
+              <div class="drop-svc"><span>🌿</span> Dermatologiya</div>
+              <div class="drop-svc"><span>⚗️</span> Endokrinologiya</div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a href="#">Həkimlər</a>
+        <div class="nav-drop">
+          <div class="drop-inner">
+            <p class="drop-title">Həkimlərimiz</p>
+            <p>100-dən çox professor, dosent və mütəxəssis həkimdən ibarət komandamız sizə xidmət edir.</p>
+            <div class="drop-stats">
+              <div><strong>40+</strong><span>Professor</span></div>
+              <div><strong>60+</strong><span>Mütəxəssis</span></div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a href="#">Əlaqə</a>
+        <div class="nav-drop">
+          <div class="drop-inner">
+            <p class="drop-title">Bizimlə Əlaqə</p>
+            <div class="drop-contact">
+              <div><span>📞</span> <strong>+994 12 555-00-00</strong></div>
+              <div><span>🚨</span> <strong>+994 12 555-01-01</strong> (Təcili)</div>
+              <div><span>📧</span> info@medplus.az</div>
+              <div><span>📍</span> Neftçilər pr. 45, Bakı</div>
+              <div><span>⏰</span> B.e–Şənbə: 08:00–20:00</div>
+              <div><span>🗓️</span> Bazar: 09:00–15:00</div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-bg-orb orb1"></div>
+    <div class="hero-bg-orb orb2"></div>
+    <div class="hero-bg-orb orb3"></div>
+    <span class="hero-tag">Bakının №1 Tibb Mərkəzi</span>
+    <h2 class="hero-h">Sağlamlığınız üçün<br><em>ən yaxşı həkimlər</em> burada</h2>
+    <p class="hero-sub">Müasir tibb avadanlığı və peşəkar mütəxəssislərimizlə xidmətinizdəyik. Növbənizi onlayn götürün.</p>
+    <p class="dept-label">🏬 Şöbə seçin</p>
+    <div class="dept-btns" id="deptBtns">
+      <button class="dbtn" onclick="pickDept(this,'kardio')">❤️ Kardiologiya</button>
+      <button class="dbtn" onclick="pickDept(this,'neuro')">🧠 Nevrologiya</button>
+      <button class="dbtn" onclick="pickDept(this,'ortho')">🦴 Ortopediya</button>
+      <button class="dbtn" onclick="pickDept(this,'ped')">👶 Pediatriya</button>
+      <button class="dbtn" onclick="pickDept(this,'goz')">👁️ Oftalmologiya</button>
+      <button class="dbtn" onclick="pickDept(this,'cer')">🩺 Cərrahiyyə</button>
+      <button class="dbtn" onclick="pickDept(this,'derm')">🌿 Dermatologiya</button>
+      <button class="dbtn" onclick="pickDept(this,'endokrin')">⚗️ Endokrinologiya</button>
+    </div>
+  </div>
+  <div class="scroll-hint">↓ Şöbə seçərək davam edin</div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 2 — ŞÖBƏ SEQMENTİ
+═══════════════════════════════════════════════ -->
+<section id="s2">
+  <div class="inner">
+    <button class="back-btn" onclick="goBack(2)">← Geri</button>
+    <div class="sec-head">
+      <p class="sec-tag">Şöbələrimiz</p>
+      <h2 id="deptTitle">Şöbə</h2>
+    </div>
+    <div class="dept-grid" id="deptGrid"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 3 — HƏKİMLƏR
+═══════════════════════════════════════════════ -->
+<section id="s3">
+  <div class="inner">
+    <button class="back-btn" onclick="goBack(3)">← Geri</button>
+    <div class="sec-head">
+      <p class="sec-tag">Mütəxəssislərimiz</p>
+      <h2 id="docTitle">Həkimlər</h2>
+    </div>
+    <div class="doc-grid" id="docGrid"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 4 — HƏKİM PROFİLİ
+═══════════════════════════════════════════════ -->
+<section id="s4">
+  <div class="inner">
+    <button class="back-btn light-back" onclick="goBack(4)">← Geri</button>
+    <div id="profWrap" class="prof-wrap"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 5 — İŞ QRAFİKİ / NÖVBƏ
+═══════════════════════════════════════════════ -->
+<section id="s5">
+  <div class="inner">
+    <button class="back-btn" onclick="goBack(5)">← Geri</button>
+    <div class="sec-head">
+      <p class="sec-tag">Növbə Sistemi</p>
+      <h2>İş Qrafiki və Növbə</h2>
+    </div>
+    <div class="sched-wrap">
+
+      <!-- Sol: qrafik -->
+      <div class="scard">
+        <h3>📅 Həftəlik İş Qrafiki</h3>
+        <div id="schedSlots"></div>
+      </div>
+
+      <!-- Sağ: növbə formu -->
+      <div class="scard form-card">
+        <h3>🔖 Növbə Al</h3>
+        <div class="prio-note">
+          ⭐ <div><strong>Prioritet sıra:</strong> Qazi vəsiqəsi və ya şəhid ailə vəsiqəsi olan şəxslər öncəlik qazanır. Vəsiqə seriya nömrəsi mütləq daxil edilməlidir.</div>
+        </div>
+
+        <!-- Şəxsiyyət vəsiqəsi -->
+        <div class="fsec">🪪 Şəxsiyyət Vəsiqəsi</div>
+        <div class="fg">
+          <label>Seriya Nömrəsi</label>
+          <input type="text" id="fSerial" placeholder="Məs: AZE1234567" maxlength="10" oninput="onlyUpperDigits(this);clrErr('fSerial')"/>
+          <span class="emsg" id="e-fSerial"></span>
+        </div>
+        <div class="fg">
+          <label>FİN Kod <small>(dəqiq 7 simvol)</small></label>
+          <input type="text" id="fFin" placeholder="Məs: 1A2B3C4" maxlength="7" oninput="onlyUpperDigits(this);clrErr('fFin')"/>
+          <span class="emsg" id="e-fFin"></span>
+        </div>
+
+        <!-- Şəxsi məlumatlar -->
+        <div class="fsec">👤 Şəxsi Məlumatlar</div>
+        <div class="fg">
+          <label>Ad Soyad <small>(yalnız hərf)</small></label>
+          <input type="text" id="fName" placeholder="Məs: Ali Muhammedli" oninput="onlyLetters(this);clrErr('fName')"/>
+          <span class="emsg" id="e-fName"></span>
+        </div>
+        <div class="fg">
+          <label>Telefon <small>(yalnız rəqəm)</small></label>
+          <input type="text" id="fPhone" placeholder="994501234567" maxlength="10" oninput="onlyDigits(this);clrErr('fPhone')"/>
+          <span class="emsg" id="e-fPhone"></span>
+        </div>
+
+        <!-- Doğum tarixi -->
+        <div class="fsec">📆 Doğum Tarixi</div>
+        <div class="dob-row">
+          <div class="fg dob-p">
+            <label>Gün</label>
+            <input type="text" id="fDay" placeholder="GG" maxlength="2" oninput="onlyDigits(this);clrErr('fDay')"/>
+            <span class="emsg" id="e-fDay"></span>
+          </div>
+          <div class="fg dob-p">
+            <label>Ay</label>
+            <input type="text" id="fMonth" placeholder="AA" maxlength="2" oninput="onlyDigits(this);clrErr('fMonth')"/>
+            <span class="emsg" id="e-fMonth"></span>
+          </div>
+          <div class="fg dob-p">
+            <label>İl <small>(4 rəqəm)</small></label>
+            <input type="text" id="fYear" placeholder="YYYY" maxlength="4" oninput="onlyDigits(this);clrErr('fYear')"/>
+            <span class="emsg" id="e-fYear"></span>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Şikayət / Qeyd</label>
+          <textarea id="fNote" rows="2" placeholder="Qısa şikayətinizi yazın..." oninput="clrErr('fNote')"></textarea>
+          <span class="emsg" id="e-fNote"></span>
+        </div>
+
+        <!-- Prioritet -->
+        <div class="fsec">🎖️ Prioritet Status</div>
+        <div class="fg">
+          <label class="cb-row">
+            <input type="checkbox" id="cbGazi" onchange="togglePrio('gazi')"/>
+            🎖️ Qazilik vəsiqəm var <span class="pbadge">ÖNCƏLİK</span>
+          </label>
+          <div id="gaziField" class="prio-input-wrap" style="display:none">
+            <input type="text" id="fGaziS" placeholder="7 rəqəmli seriya nömrəsi (məs: 1234567)" maxlength="7" oninput="onlyDigits(this);clrErr('fGaziS')"/>
+            <span class="emsg" id="e-fGaziS"></span>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="cb-row">
+            <input type="checkbox" id="cbShehid" onchange="togglePrio('shehid')"/>
+            🕊️ Şəhid ailəsi vəsiqəm var <span class="pbadge">ÖNCƏLİK</span>
+          </label>
+          <div id="shehidField" class="prio-input-wrap" style="display:none">
+            <input type="text" id="fShehidS" placeholder="7 rəqəmli seriya nömrəsi (məs: 1234567)" maxlength="7" oninput="onlyDigits(this);clrErr('fShehidS')"/>
+            <span class="emsg" id="e-fShehidS"></span>
+          </div>
+        </div>
+
+        <div id="qResult" class="q-result"><div class="q-num" id="qNum">—</div><p id="qMsg">Növbə nömrəniz</p></div>
+        <button class="sub-btn" id="subBtn" onclick="submitQ()">✅ Növbə götür</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 6 — RƏY / ŞİKAYƏT
+═══════════════════════════════════════════════ -->
+<section id="s6">
+  <div class="inner">
+    <div class="sec-head light-head">
+      <p class="sec-tag" style="color:#a78bfa">Geri Bildirim</p>
+      <h2 style="color:#fff">Rəy və Şikayətlər</h2>
+    </div>
+    <div class="fb-wrap">
+
+      <div class="fb-card">
+        <h3>⭐ Rəy bildirin</h3>
+        <p class="fb-sub">Xidmətimizi qiymətləndirin</p>
+        <div class="stars" id="starRow"> 
+          <span class="star" onclick="setStar(1)">⭐</span>
+          <span class="star" onclick="setStar(2)">⭐</span>
+          <span class="star" onclick="setStar(3)">⭐</span>
+          <span class="star" onclick="setStar(4)">⭐</span>
+          <span class="star" onclick="setStar(5)">⭐</span>
+        </div>
+        <div class="ftype-row">
+          <button class="ftype-btn pos-btn active-pos" id="posBtn" onclick="setFT('pos')">👍 Müsbət</button>
+          <button class="ftype-btn neg-btn" id="negBtn" onclick="setFT('neg')">👎 Mənfi</button>
+        </div>
+        <input class="di" type="text" id="revName" placeholder="Adınız (istəyə bağlı)"/>
+        <textarea class="di" id="revText" rows="4" placeholder="Rəyinizi yazın..."></textarea>
+        <button class="send-btn" onclick="submitRev()">Göndər →</button>
+        <div class="ok-box" id="revOk"><div class="ok-ico">🙏</div><h4>Təşəkkür edirik!</h4><p>Rəyiniz qəbul edildi.</p></div>
+      </div>
+
+      <div class="fb-card">
+        <h3>📋 Şikayət bildirin</h3>
+        <p class="fb-sub">Şikayətiniz gizli saxlanılır</p>
+        <input class="di" type="text" id="compName" placeholder="Ad Soyad"/>
+        <input class="di" type="tel" id="compPhone" placeholder="Əlaqə nömrəsi" pattern="[0-9]+" inputmode="numeric" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');"/>
+        <select class="di" id="compType">
+          <option value="">Şikayət növü seçin...</option>
+          <option>Xidmət keyfiyyəti</option>
+          <option>Həkim davranışı</option>
+          <option>Uzun gözləmə</option>
+          <option>Qiymət problemi</option>
+          <option>Digər</option>
+        </select>
+        <textarea class="di" id="compText" rows="4" placeholder="Ətraflı izah edin..."></textarea>
+        <button class="send-btn red-btn" onclick="submitComp()">Şikayət göndər →</button>
+        <div class="ok-box" id="compOk"><div class="ok-ico">📬</div><h4>Şikayətiniz qəbul edildi</h4><p>3 iş günü ərzində əlaqə saxlanılacaq.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<script>
+/* ================================================================
+   MedPlus Xəstəxanası — script.js
+================================================================ */
+"use strict";
+
+/* ================================================================
+   VERİLƏNLƏR — Şöbələr
+================================================================ */
+const DEPTS = {
+  kardio:{ name:"Kardiologiya", icon:"❤️", sub:[
+    {id:"k1", icon:"❤️", name:"Ümumi Kardiologiya",    desc:"EKQ, ExoKQ, Holter monitorinq"},
+    {id:"k2", icon:"🩺", name:"İnterventional Kardio", desc:"Kateterizasiya, Stentləmə"},
+    {id:"k3", icon:"💊", name:"Aritmologiya",           desc:"Ritm pozuntuları, Ablyasiya"},
+    {id:"k4", icon:"🫀", name:"Ürək Çatışmazlığı",     desc:"XKÇ, Transplant hazırlığı"}
+  ]},
+  neuro:{ name:"Nevrologiya", icon:"🧠", sub:[
+    {id:"n1", icon:"🧠", name:"Klinik Nevrologiya",   desc:"İnme, Epilepsiya, Baş ağrısı"},
+    {id:"n2", icon:"🔬", name:"Neyrofiziologiya",     desc:"EEG, EMG, Sinir ilgəkləri"},
+    {id:"n3", icon:"💆", name:"Neyro-reabilitasiya",  desc:"İnme sonrası bərpa, Fizioterapi"}
+  ]},
+  ortho:{ name:"Ortopediya", icon:"🦴", sub:[
+    {id:"o1", icon:"🦴", name:"Oynaq Cərrahiyyəsi", desc:"Diz, Çiyin, Omba protezi"},
+    {id:"o2", icon:"🏃", name:"Travmatologiya",      desc:"Sınıqlar, Yırtıqlar, Çıxıqlar"},
+    {id:"o3", icon:"🦶", name:"Ayaq Cərrahiyyəsi",  desc:"Düz dabanı, Hallux valgus"}
+  ]},
+  ped:{ name:"Pediatriya", icon:"👶", sub:[
+    {id:"p1", icon:"👶", name:"Ümumi Pediatriya",   desc:"0–18 yaş, İnkişaf monitorinqi"},
+    {id:"p2", icon:"🧒", name:"Neonatalogiya",       desc:"Yeni doğulmuşlar, İntensiv qulluq"},
+    {id:"p3", icon:"🍼", name:"Uşaq Qidalanması",   desc:"Laktasiya, Allerji, Çəki nəzarəti"}
+  ]},
+  goz:{ name:"Oftalmologiya", icon:"👁️", sub:[
+    {id:"g1", icon:"👁️", name:"Ümumi Göz",            desc:"Refrakta, Retina, Glaukoma"},
+    {id:"g2", icon:"🔭", name:"Lazer Cərrahiyyəsi",   desc:"LASIK, PRK, LASEK"},
+    {id:"g3", icon:"🔬", name:"Uşaq Oftalmologiyası", desc:"Şaşılıq, Ambliopi, Miyopiya"}
+  ]},
+  cer:{ name:"Cərrahiyyə", icon:"🩺", sub:[
+    {id:"c1", icon:"🔪", name:"Ümumi Cərrahiyyə",     desc:"Laparoskopik, Endoskopik"},
+    {id:"c2", icon:"🫀", name:"Göğüs Cərrahiyyəsi",  desc:"Ağciyər, Özofaqus, Mediastinum"},
+    {id:"c3", icon:"🫁", name:"Vaskulyar Cərrahiyyə", desc:"Damarlar, Aort, Varikoz"}
+  ]},
+  derm:{ name:"Dermatologiya", icon:"🌿", sub:[
+    {id:"d1", icon:"🌿", name:"Klinik Dermatologiya",   desc:"Psoriaz, Ekzema, Dəri xərçəngi"},
+    {id:"d2", icon:"💆", name:"Kosmetik Dermatologiya", desc:"Botox, Doldurucular, Lazer"},
+    {id:"d3", icon:"🧴", name:"Trikologiya",            desc:"Saç tökülməsi, FUE transplant"}
+  ]},
+  endokrin:{ name:"Endokrinologiya", icon:"⚗️", sub:[
+    {id:"e1", icon:"⚗️", name:"Diabet Mərkəzi",      desc:"Tip 1, Tip 2, Gestasion diabet"},
+    {id:"e2", icon:"🦋", name:"Qalxanabənzər Vəz",  desc:"Hipotireoz, Qreyv, Tiroidit"},
+    {id:"e3", icon:"🧪", name:"Hormonal Pozuntular", desc:"Hipofiz, Böyrəküstü, Reproduktiv"}
+  ]}
+};
+
+/* ================================================================
+   VERİLƏNLƏR — Həkimlər (hər alt şöbədə ən az 5 nəfər)
+================================================================ */
+const DOCS = {
+
+  /* ──────────────────── KARDİOLOGİYA ──────────────────── */
+  k1:[
+    {id:"dk1_1",e:"👨‍⚕️",name:"Prof. Dr. Elçin Həsənov",      spec:"Kardiologiya",exp:"22 il",rat:"4.9",
+     about:"1994-cü ildə Bakı DTU-nu bitirərək Hamburqda ixtisaslaşmış. Ölkədə ilk kardio-defibrilyatorun yeridilməsini icra etmişdir.",
+     edu:["Bakı DTU – 1994","Hamburg Uni Hospital – 1998","AHA Sertifikatı – 2002"],
+     sched:{"Bazar ertəsi":"09:00–13:00 / 14:00–17:00","Çərşənbə axşamı":"09:00–13:00","Cümə":"10:00–15:00","Şənbə":"09:00–12:00"}},
+    {id:"dk1_2",e:"👩‍⚕️",name:"Dr. Nərmin Quliyeva",           spec:"Kardiologiya",exp:"14 il",rat:"4.8",
+     about:"Ekxokardioqrafiya üzrə mütəxəssis. 8000+ EKQ interpretasiyası icra etmişdir.",
+     edu:["Bakı DTU – 2006","Ankara Üniversiteti – 2010","ESC Sertifikatı – 2013"],
+     sched:{"Bazar ertəsi":"10:00–18:00","Çərşənbə":"09:00–14:00","Cümə axşamı":"13:00–18:00"}},
+    {id:"dk1_3",e:"👨‍⚕️",name:"Dr. Tural Abbasov",             spec:"Kardiologiya",exp:"9 il", rat:"4.7",
+     about:"Holter monitorinq, stres EKQ sahəsində ixtisaslaşmış gənc kardioloq.",
+     edu:["Bakı DTU – 2011","Bonn Üniversiteti – 2015"],
+     sched:{"Çərşənbə axşamı":"14:00–19:00","Şənbə":"09:00–14:00"}},
+    {id:"dk1_4",e:"👩‍⚕️",name:"Dr. Aytən Babayeva",            spec:"Kardiologiya",exp:"11 il",rat:"4.7",
+     about:"Kardiovaskulyar risk qiymətləndirilməsi və profilaktik kardiologiya üzrə mütəxəssis.",
+     edu:["Bakı DTU – 2009","Leipzig Üniversiteti – 2013"],
+     sched:{"Bazar ertəsi":"11:00–17:00","Cümə":"09:00–14:00"}},
+    {id:"dk1_5",e:"👨‍⚕️",name:"Dr. Rəşad Quliyev",             spec:"Kardiologiya",exp:"7 il", rat:"4.6",
+     about:"İnvaziv olmayan kardioloq. Stres exokardioqrafiya və nüvə kardiologiyası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","Tbilisi Tibb Üniversiteti – 2017"],
+     sched:{"Çərşənbə axşamı":"09:00–15:00","Cümə axşamı":"09:00–15:00"}}
+  ],
+
+  k2:[
+    {id:"dk2_1",e:"👨‍⚕️",name:"Prof. Dr. Murad İsgəndərov",   spec:"İnterventional Kardio",exp:"25 il",rat:"5.0",
+     about:"3500+ kateterizasiya, 1200+ stentləmə icra etmiş. Xaricdə 4 patenti var.",
+     edu:["Paris Descartes – 1997","Johns Hopkins – 2001","ESC Fellow – 2005"],
+     sched:{"Bazar ertəsi":"08:00–12:00","Çərşənbə":"08:00–12:00","Cümə":"08:00–11:00"}},
+    {id:"dk2_2",e:"👩‍⚕️",name:"Dr. Lalə Rəsulova",            spec:"İnterventional Kardio",exp:"11 il",rat:"4.8",
+     about:"Kompleks koronar intervensiyanın mütəxəssisi.",
+     edu:["Bakı DTU – 2008","München LMU – 2012"],
+     sched:{"Çərşənbə axşamı":"09:00–15:00","Cümə axşamı":"09:00–15:00"}},
+    {id:"dk2_3",e:"👨‍⚕️",name:"Dr. Cavid Əliyev",              spec:"İnterventional Kardio",exp:"13 il",rat:"4.8",
+     about:"Struktural ürək xəstəliklərinin (TAVR, MitraClip) müalicəsində ixtisaslaşmışdır.",
+     edu:["Bakı DTU – 2007","Vienna AKH – 2012"],
+     sched:{"Bazar ertəsi":"09:00–14:00","Cümə":"09:00–13:00"}},
+    {id:"dk2_4",e:"👩‍⚕️",name:"Dr. Nigar Hüseynova",          spec:"İnterventional Kardio",exp:"8 il", rat:"4.6",
+     about:"Periferik arteriya xəstəlikləri və renal arteriya stentlənməsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","Hannover MHH – 2016"],
+     sched:{"Çərşənbə":"10:00–16:00","Şənbə":"09:00–13:00"}},
+    {id:"dk2_5",e:"👨‍⚕️",name:"Dr. Elnur Məmmədov",           spec:"İnterventional Kardio",exp:"9 il", rat:"4.7",
+     about:"Aortokoroner şuntlama əməliyyatları sonrası kateterizasiya mütəxəssisi.",
+     edu:["Bakı DTU – 2011","Freiburg Uni – 2015"],
+     sched:{"Çərşənbə axşamı":"08:00–14:00","Cümə axşamı":"08:00–14:00"}}
+  ],
+
+  k3:[
+    {id:"dk3_1",e:"👨‍⚕️",name:"Dr. Kamran Nəcəfzadə",         spec:"Aritmologiya",exp:"16 il",rat:"4.9",
+     about:"2000+ kateter ablyasiyası icra etmiş. Elektrofizioloji ixtisaslıdır.",
+     edu:["Bakı DTU – 2004","EHJ Fellowship – 2008"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Çərşənbə":"10:00–16:00","Cümə":"10:00–14:00"}},
+    {id:"dk3_2",e:"👩‍⚕️",name:"Dr. Samirə Əlizadə",           spec:"Aritmologiya",exp:"10 il",rat:"4.7",
+     about:"Supraventrikulyar taxikardiyaların ablyasiyası üzrə mütəxəssis.",
+     edu:["Bakı DTU – 2010","Hamburg Uni – 2014"],
+     sched:{"Çərşənbə axşamı":"09:00–15:00","Cümə axşamı":"09:00–15:00"}},
+    {id:"dk3_3",e:"👨‍⚕️",name:"Dr. Fuad İsmayılov",            spec:"Aritmologiya",exp:"8 il", rat:"4.6",
+     about:"İmplantirulan cihazlar (EKS, ICD, CRT) üzrə ixtisaslı elektrofizioloq.",
+     edu:["Bakı DTU – 2012","Ankara Üniversiteti – 2016"],
+     sched:{"Bazar ertəsi":"08:00–14:00","Şənbə":"09:00–12:00"}},
+    {id:"dk3_4",e:"👩‍⚕️",name:"Dr. Günel Kərimova",           spec:"Aritmologiya",exp:"7 il", rat:"4.6",
+     about:"Pediatrik aritmologiya və anadangəlmə ürək bloklarının müalicəsi üzrə mütəxəssis.",
+     edu:["Bakı DTU – 2013","İstanbul Üniversiteti – 2017"],
+     sched:{"Çərşənbə":"11:00–17:00","Cümə":"11:00–16:00"}},
+    {id:"dk3_5",e:"👨‍⚕️",name:"Dr. Vüsal Rəcəbov",            spec:"Aritmologiya",exp:"6 il", rat:"4.5",
+     about:"Holter EKQ analizi, vagal sinir stimulasiyası üzrə ixtisaslaşmışdır.",
+     edu:["Bakı DTU – 2014","Tbilisi Tibb Üniversiteti – 2018"],
+     sched:{"Çərşənbə axşamı":"12:00–18:00","Şənbə":"10:00–14:00"}}
+  ],
+
+  k4:[
+    {id:"dk4_1",e:"👩‍⚕️",name:"Prof. Dr. Sevinc Hüseynova",   spec:"Ürək Çatışmazlığı",exp:"20 il",rat:"4.9",
+     about:"Azərbaycanda XKÇ müalicəsinin ən tanınan mütəxəssisi. Transplant komanda üzvü.",
+     edu:["Bakı DTU – 2000","Wien AKH – 2004","ESC Sertifikatı – 2007"],
+     sched:{"Çərşənbə axşamı":"09:00–13:00","Cümə axşamı":"09:00–13:00","Şənbə":"09:00–12:00"}},
+    {id:"dk4_2",e:"👨‍⚕️",name:"Dr. Orxan Tahirov",            spec:"Ürək Çatışmazlığı",exp:"12 il",rat:"4.8",
+     about:"Şiddətli XKÇ-nin medikamentoz müalicəsi, LVAD cihaz terapiyası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2008","Graz Üniversiteti – 2012"],
+     sched:{"Bazar ertəsi":"09:00–15:00","Çərşənbə":"09:00–15:00"}},
+    {id:"dk4_3",e:"👩‍⚕️",name:"Dr. Röya Qasımova",            spec:"Ürək Çatışmazlığı",exp:"9 il", rat:"4.7",
+     about:"Kardiak reabilitasiya proqramları və yaşam keyfiyyətinin yüksəldilməsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2011","Leipzig Üniversiteti – 2015"],
+     sched:{"Çərşənbə axşamı":"10:00–16:00","Cümə":"10:00–15:00"}},
+    {id:"dk4_4",e:"👨‍⚕️",name:"Dr. Elnur Babazadə",           spec:"Ürək Çatışmazlığı",exp:"7 il", rat:"4.6",
+     about:"Kardiak biomarkerlər və gənc yaşlı XKÇ diaqnostikası üzrə mütəxəssis.",
+     edu:["Bakı DTU – 2013","İstanbul Üniversiteti – 2017"],
+     sched:{"Çərşənbə axşamı":"11:00–17:00","Şənbə":"10:00–14:00"}},
+    {id:"dk4_5",e:"👩‍⚕️",name:"Dr. Türkan Abbasova",          spec:"Ürək Çatışmazlığı",exp:"8 il", rat:"4.6",
+     about:"Diaqnostik kateterizasiya, ürək transplantasiyasına hazırlıq protokollarında ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","Hannover MHH – 2016"],
+     sched:{"Bazar ertəsi":"08:00–14:00","Cümə":"08:00–13:00"}}
+  ],
+
+  /* ──────────────────── NEVROLOGİYA ──────────────────── */
+  n1:[
+    {id:"dn1_1",e:"👩‍⚕️",name:"Dr. Aytən Rəhimova",           spec:"Klinik Nevrologiya",exp:"17 il",rat:"4.9",
+     about:"İnme və epilepsiya müalicəsinin aparıcı mütəxəssisi. EEG interpretasiyasında yüksək ixtisaslıdır.",
+     edu:["Bakı DTU – 2003","Viyana Üniversiteti – 2007"],
+     sched:{"Bazar ertəsi":"09:00–17:00","Çərşənbə":"09:00–17:00","Cümə":"09:00–13:00"}},
+    {id:"dn1_2",e:"👨‍⚕️",name:"Dr. Vüsal Hüseynov",           spec:"Klinik Nevrologiya",exp:"10 il",rat:"4.7",
+     about:"Baş ağrısı sindromları, migren müalicəsi üzrə ixtisaslaşmışdır.",
+     edu:["Bakı DTU – 2010","İstanbul Üniversiteti – 2014"],
+     sched:{"Çərşənbə axşamı":"10:00–18:00","Şənbə":"09:00–13:00"}},
+    {id:"dn1_3",e:"👩‍⚕️",name:"Dr. Leyla Musayeva",            spec:"Klinik Nevrologiya",exp:"8 il", rat:"4.7",
+     about:"Periferik neyropatiya, multiple skleroz ilkin diaqnostikası üzrə mütəxəssisdir.",
+     edu:["Bakı DTU – 2012","Praha Karlov Üniversiteti – 2016"],
+     sched:{"Bazar ertəsi":"10:00–17:00","Cümə":"09:00–14:00"}},
+    {id:"dn1_4",e:"👨‍⚕️",name:"Dr. Rauf Aliyev",               spec:"Klinik Nevrologiya",exp:"12 il",rat:"4.8",
+     about:"Hərəki nevrolog. Parkinson, ALS, motor neyronu xəstəlikləri üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2008","Berlin Charité – 2012"],
+     sched:{"Çərşənbə axşamı":"09:00–16:00","Cümə axşamı":"09:00–16:00"}},
+    {id:"dn1_5",e:"👩‍⚕️",name:"Dr. Xədicə Sultanova",          spec:"Klinik Nevrologiya",exp:"7 il", rat:"4.6",
+     about:"Kognitivliyin qiymətləndirilməsi, demansiya profilaktikası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","München LMU – 2017"],
+     sched:{"Çərşənbə":"11:00–18:00","Şənbə":"09:00–13:00"}}
+  ],
+
+  n2:[
+    {id:"dn2_1",e:"👨‍⚕️",name:"Dr. Orxan Əliyev",              spec:"Neyrofiziologiya",exp:"13 il",rat:"4.8",
+     about:"EMG, EEG və uyarılmış potensiallar üzrə mütəxəssis. 5000+ müayinə.",
+     edu:["Bakı DTU – 2007","Freiburg Üniversiteti – 2011"],
+     sched:{"Bazar ertəsi":"08:00–14:00","Cümə axşamı":"08:00–14:00"}},
+    {id:"dn2_2",e:"👩‍⚕️",name:"Dr. Aynur Əhmədova",            spec:"Neyrofiziologiya",exp:"9 il", rat:"4.7",
+     about:"İntraoperativ neyromonitorinq (IONM) üzrə mütəxəssis. Beyin cərrahiyyəsini dəstəkləyir.",
+     edu:["Bakı DTU – 2011","Hannover MHH – 2015"],
+     sched:{"Çərşənbə axşamı":"09:00–15:00","Cümə":"09:00–14:00"}},
+    {id:"dn2_3",e:"👨‍⚕️",name:"Dr. Şamil Hüseynov",            spec:"Neyrofiziologiya",exp:"8 il", rat:"4.6",
+     about:"Xəstəxana daxili EEG monitorinqi, epileptik ocaq lokalizasiyası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","Wien Universitätsklinikum – 2016"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Çərşənbə":"10:00–16:00"}},
+    {id:"dn2_4",e:"👩‍⚕️",name:"Dr. Nigar Quliyeva",            spec:"Neyrofiziologiya",exp:"7 il", rat:"4.6",
+     about:"Periferik sinir ilgəkləri: karpal tunnel, ulnar sinir sıxılmaları üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","İstanbul Üniversiteti – 2017"],
+     sched:{"Çərşənbə axşamı":"11:00–17:00","Şənbə":"09:00–13:00"}},
+    {id:"dn2_5",e:"👨‍⚕️",name:"Dr. Cavid Babayev",              spec:"Neyrofiziologiya",exp:"6 il", rat:"4.5",
+     about:"Transkranial maqnit stimulyasiyası (TMS) diagnostikası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2014","Bonn Üniversiteti – 2018"],
+     sched:{"Çərşənbə":"12:00–18:00","Cümə axşamı":"12:00–18:00"}}
+  ],
+
+  n3:[
+    {id:"dn3_1",e:"👩‍⚕️",name:"Dr. Günel Məmmədova",           spec:"Neyro-reabilitasiya",exp:"8 il", rat:"4.8",
+     about:"İnme sonrası bərpa proqramları üzrə mütəxəssis.",
+     edu:["Bakı DTU – 2012","Hannover MHH – 2016"],
+     sched:{"Çərşənbə":"10:00–17:00","Cümə":"10:00–17:00"}},
+    {id:"dn3_2",e:"👨‍⚕️",name:"Dr. Zaur Nəcəfov",              spec:"Neyro-reabilitasiya",exp:"7 il", rat:"4.6",
+     about:"Oturaq beyin zədəsindən sonra yenidən funksional bərpa, ağız-danışıq terapiyası.",
+     edu:["Bakı DTU – 2013","Leipzig Üniversiteti – 2017"],
+     sched:{"Bazar ertəsi":"09:00–15:00","Cümə axşamı":"09:00–15:00"}},
+    {id:"dn3_3",e:"👩‍⚕️",name:"Dr. Lalə Rəsulova",             spec:"Neyro-reabilitasiya",exp:"9 il", rat:"4.7",
+     about:"Neyrofiziologiya əsaslı fizioterapi proqramları. Yürüş analizi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2011","München LMU – 2015"],
+     sched:{"Çərşənbə axşamı":"10:00–17:00","Şənbə":"09:00–13:00"}},
+    {id:"dn3_4",e:"👨‍⚕️",name:"Dr. Elvin Rəhimov",             spec:"Neyro-reabilitasiya",exp:"6 il", rat:"4.5",
+     about:"Robot-yardımlı fizioterapi, ekzoskelet terapiyası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2014","Berlin Charité – 2018"],
+     sched:{"Çərşənbə":"11:00–18:00","Cümə":"11:00–17:00"}},
+    {id:"dn3_5",e:"👩‍⚕️",name:"Dr. Aytən Hüseynova",           spec:"Neyro-reabilitasiya",exp:"5 il", rat:"4.5",
+     about:"Nevropsikoloji reabilitasiya, kognitiv bərpa, diqqət-yaddaş treyninqi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2015","Graz Karl-Franzens – 2019"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Cümə axşamı":"10:00–16:00"}}
+  ],
+
+  /* ──────────────────── ORTOPEDİYA ──────────────────── */
+  o1:[
+    {id:"do1_1",e:"👨‍⚕️",name:"Prof. Dr. Kamran Babayev",      spec:"Oynaq Cərrahiyyəsi",exp:"23 il",rat:"5.0",
+     about:"Diz və çiyin endoprotetikası üzrə ölkənin aparıcı cərrahı. Robotik cərrahiyyə sertifikatlıdır.",
+     edu:["Bakı DTU – 1997","Mayo Clinic – 2001","AAOS Fellow – 2004"],
+     sched:{"Bazar ertəsi":"09:00–14:00","Çərşənbə":"09:00–14:00","Cümə axşamı":"09:00–13:00"}},
+    {id:"do1_2",e:"👩‍⚕️",name:"Dr. Nigar Əsgərova",            spec:"Oynaq Cərrahiyyəsi",exp:"12 il",rat:"4.8",
+     about:"Artroskopik cərrahiyyə üzrə mütəxəssis. Diz bağı rekonstruksiyasında yüksək ixtisaslıdır.",
+     edu:["Bakı DTU – 2008","München TUM – 2012"],
+     sched:{"Çərşənbə axşamı":"09:00–16:00","Şənbə":"09:00–13:00"}},
+    {id:"do1_3",e:"👨‍⚕️",name:"Dr. Əli Kərimov",               spec:"Oynaq Cərrahiyyəsi",exp:"10 il",rat:"4.7",
+     about:"Çiyin artroskopiyal cərrahiyyəsi, rotator manjet rekonstruksiyası üzrə mütəxəssisdir.",
+     edu:["Bakı DTU – 2010","Zürich Balgrist – 2014"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Cümə":"10:00–15:00"}},
+    {id:"do1_4",e:"👩‍⚕️",name:"Dr. Rəna Nəcəfova",             spec:"Oynaq Cərrahiyyəsi",exp:"9 il", rat:"4.6",
+     about:"Pediatrik ortopediya, böyümə yaşı oynaq xəstəlikləri üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2011","İstanbul Üniversiteti – 2015"],
+     sched:{"Çərşənbə":"11:00–17:00","Cümə axşamı":"11:00–16:00"}},
+    {id:"do1_5",e:"👨‍⚕️",name:"Dr. Tural Musayev",              spec:"Oynaq Cərrahiyyəsi",exp:"8 il", rat:"4.6",
+     about:"Minimum invaziv omba protezi əməliyyatları üzrə ixtisaslaşmışdır.",
+     edu:["Bakı DTU – 2012","Berlin Charité – 2016"],
+     sched:{"Çərşənbə axşamı":"10:00–17:00","Şənbə":"09:00–13:00"}}
+  ],
+
+  o2:[
+    {id:"do2_1",e:"👨‍⚕️",name:"Dr. Fərid İsmayılov",            spec:"Travmatologiya",exp:"15 il",rat:"4.7",
+     about:"Kompleks sınıq cərrahiyyəsi. AO Travma sertifikatlıdır.",
+     edu:["Bakı DTU – 2005","AO Travma Sertifikatı – 2009","Zürich AO Kurs – 2012"],
+     sched:{"Bazar ertəsi":"10:00–18:00","Çərşənbə":"10:00–18:00","Cümə":"10:00–15:00"}},
+    {id:"do2_2",e:"👩‍⚕️",name:"Dr. Aynur Kərimova",             spec:"Travmatologiya",exp:"8 il", rat:"4.6",
+     about:"Pedestrian travma, idman yaralanmaları, pediatrik travmatologiya üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","Paris Travma İnstitutu – 2016"],
+     sched:{"Çərşənbə axşamı":"11:00–18:00","Cümə axşamı":"11:00–18:00"}},
+    {id:"do2_3",e:"👨‍⚕️",name:"Dr. Namiq Quliyev",              spec:"Travmatologiya",exp:"12 il",rat:"4.7",
+     about:"Yüksəkdən düşmə yaralanmaları, çoxlu sınıqların cərrahiyyəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2008","Hamburg UKE – 2012"],
+     sched:{"Bazar ertəsi":"09:00–15:00","Çərşənbə":"09:00–15:00"}},
+    {id:"do2_4",e:"👩‍⚕️",name:"Dr. Sevinc Qasımova",            spec:"Travmatologiya",exp:"7 il", rat:"4.6",
+     about:"Əl-biləkaltı sınıq cərrahiyyəsi, mikrocərrahiyyə üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","Graz Karl-Franzens – 2017"],
+     sched:{"Çərşənbə":"10:00–17:00","Cümə axşamı":"10:00–16:00"}},
+    {id:"do2_5",e:"👨‍⚕️",name:"Dr. Elçin Babayev",              spec:"Travmatologiya",exp:"6 il", rat:"4.5",
+     about:"Politravma, intensiv şəraitdə travmatoloji müdaxilə, ilik mıxı texnikası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2014","Leipzig Üniversiteti – 2018"],
+     sched:{"Çərşənbə axşamı":"09:00–16:00","Şənbə":"09:00–13:00"}}
+  ],
+
+  o3:[
+    {id:"do3_1",e:"👩‍⚕️",name:"Dr. Rəna Qasımova",              spec:"Ayaq Cərrahiyyəsi",exp:"9 il", rat:"4.6",
+     about:"Düz dabanı düzəldilməsi, hallux valgus cərrahiyyəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2011","Paris Ortho İnstitutu – 2015"],
+     sched:{"Çərşənbə axşamı":"11:00–17:00","Cümə":"11:00–16:00"}},
+    {id:"do3_2",e:"👨‍⚕️",name:"Dr. Emil Hüseynov",              spec:"Ayaq Cərrahiyyəsi",exp:"8 il", rat:"4.5",
+     about:"Diabetik ayaq sindromu, yarğanlı yaralara plastik yanaşma üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","Wien Universitätsklinikum – 2016"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Çərşənbə":"10:00–16:00"}},
+    {id:"do3_3",e:"👩‍⚕️",name:"Dr. Nigar Rəhimova",             spec:"Ayaq Cərrahiyyəsi",exp:"7 il", rat:"4.5",
+     about:"Qabırğa düzəliş cərrahiyyəsi, Achilles vətəri xəstəlikləri üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","Freiburg Üniversiteti – 2017"],
+     sched:{"Çərşənbə axşamı":"10:00–16:00","Şənbə":"09:00–13:00"}},
+    {id:"do3_4",e:"👨‍⚕️",name:"Dr. Zaur İsgəndərov",            spec:"Ayaq Cərrahiyyəsi",exp:"6 il", rat:"4.5",
+     about:"İdman ayaq yaralanmaları, stress sınıqları, plantar fassiit cərrahiyyəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2014","İstanbul Üniversiteti – 2018"],
+     sched:{"Çərşənbə":"11:00–18:00","Cümə axşamı":"11:00–16:00"}},
+    {id:"do3_5",e:"👩‍⚕️",name:"Dr. Türkan Əliyeva",             spec:"Ayaq Cərrahiyyəsi",exp:"5 il", rat:"4.4",
+     about:"Uşaq ayaq deformasiyaları, skelet displaziyalarının cərrahiyyəsi üzrə ixtisaslaşmışdır.",
+     edu:["Bakı DTU – 2015","Leipzig Üniversiteti – 2019"],
+     sched:{"Bazar ertəsi":"11:00–17:00","Cümə":"10:00–15:00"}}
+  ],
+
+  /* ──────────────────── PEDİATRİYA ──────────────────── */
+  p1:[
+    {id:"dp1_1",e:"👩‍⚕️",name:"Dr. Sevinc Əliyeva",             spec:"Ümumi Pediatriya",exp:"12 il",rat:"4.9",
+     about:"Uşaq sağlamlığı, böyümə-inkişaf monitorinqi, profilaktik tibb üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2008","İstanbul Ü. Uşaq Klinikası – 2012"],
+     sched:{"Bazar ertəsi":"09:00–17:00","Çərşənbə axşamı":"09:00–17:00","Şənbə":"09:00–14:00"}},
+    {id:"dp1_2",e:"👨‍⚕️",name:"Dr. Zaur Babazadə",              spec:"Ümumi Pediatriya",exp:"7 il", rat:"4.7",
+     about:"Uşaq allergologiyası, immunologiyası, astma müalicəsi üzrə əlavə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","Ankara Hacettepe – 2016"],
+     sched:{"Çərşənbə":"10:00–18:00","Cümə axşamı":"10:00–18:00"}},
+    {id:"dp1_3",e:"👩‍⚕️",name:"Dr. Aynur Məmmədli",             spec:"Ümumi Pediatriya",exp:"9 il", rat:"4.7",
+     about:"Uşaq qidalanma pozuntuları, piylənmə, diabet önləmə proqramları üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2011","München LMU – 2015"],
+     sched:{"Bazar ertəsi":"10:00–17:00","Şənbə":"09:00–14:00"}},
+    {id:"dp1_4",e:"👨‍⚕️",name:"Dr. Rauf Həsənov",               spec:"Ümumi Pediatriya",exp:"10 il",rat:"4.7",
+     about:"Uşaq infeksion xəstəlikləri, vaksinasiya proqramları, karantine xəstəliklər üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2010","Wien AKH – 2014"],
+     sched:{"Çərşənbə axşamı":"09:00–17:00","Cümə":"09:00–14:00"}},
+    {id:"dp1_5",e:"👩‍⚕️",name:"Dr. Günel Sultanova",            spec:"Ümumi Pediatriya",exp:"8 il", rat:"4.6",
+     about:"Uşaqlarda davranış problemləri, ADHD, autizm spektri dəyərləndirməsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","Hannover MHH – 2016"],
+     sched:{"Çərşənbə":"11:00–18:00","Cümə axşamı":"11:00–18:00"}}
+  ],
+
+  p2:[
+    {id:"dp2_1",e:"👩‍⚕️",name:"Prof. Dr. Aynur Hüseynova",      spec:"Neonatalogiya",exp:"19 il",rat:"5.0",
+     about:"Ölkənin aparıcı neonataloqu. Erkən doğulmuş körpələrin intensiv qulluğu üzrə mütəxəssisdir.",
+     edu:["Bakı DTU – 2001","Heidelberg Neonatalogiya – 2005","ESPGHAN – 2008"],
+     sched:{"Bazar ertəsi":"08:00–14:00","Çərşənbə":"08:00–14:00","Cümə":"08:00–12:00"}},
+    {id:"dp2_2",e:"👨‍⚕️",name:"Dr. Namiq Əliyev",               spec:"Neonatalogiya",exp:"11 il",rat:"4.8",
+     about:"Neonatal infeksiyalar, sepsis müalicəsi, yetişməmiş körpə qulluğu üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2009","Leipzig Üniversiteti – 2013"],
+     sched:{"Çərşənbə axşamı":"09:00–15:00","Cümə axşamı":"09:00–15:00"}},
+    {id:"dp2_3",e:"👩‍⚕️",name:"Dr. Leyla Rəsulova",              spec:"Neonatalogiya",exp:"9 il", rat:"4.7",
+     about:"Neonatal sarılıq, hiperbilirubinemi fototerapiya protokolları üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2011","Graz Karl-Franzens – 2015"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Çərşənbə":"10:00–16:00"}},
+    {id:"dp2_4",e:"👨‍⚕️",name:"Dr. Elçin Babazadə",              spec:"Neonatalogiya",exp:"7 il", rat:"4.6",
+     about:"Neonatal nefrologiya, böyrək çatışmazlığının erkən müalicəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","Berlin Charité – 2017"],
+     sched:{"Çərşənbə axşamı":"10:00–17:00","Şənbə":"09:00–13:00"}},
+    {id:"dp2_5",e:"👩‍⚕️",name:"Dr. Türkan Hüseynova",           spec:"Neonatalogiya",exp:"6 il", rat:"4.5",
+     about:"Neonatal neyrologiya, asfıksiyanın neyroprotektor terapiyası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2014","Hannover MHH – 2018"],
+     sched:{"Çərşənbə":"11:00–18:00","Cümə":"11:00–16:00"}}
+  ],
+
+  p3:[
+    {id:"dp3_1",e:"👨‍⚕️",name:"Dr. Elvin Rəsulzadə",            spec:"Uşaq Qidalanması",exp:"8 il", rat:"4.7",
+     about:"Laktasiya məsləhəti, uşaq allergiyaları, qida gecikmə problemləri üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","Viyana, Uşaq Qidalanması – 2016"],
+     sched:{"Çərşənbə axşamı":"10:00–17:00","Şənbə":"10:00–14:00"}},
+    {id:"dp3_2",e:"👩‍⚕️",name:"Dr. Nigar Babayeva",              spec:"Uşaq Qidalanması",exp:"7 il", rat:"4.6",
+     about:"Uşaqlarda qida allergilərinin diaqnostikası, eliminasiya pəhrizləri üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","München LMU – 2017"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Cümə":"10:00–15:00"}},
+    {id:"dp3_3",e:"👨‍⚕️",name:"Dr. Vüsal Quliyev",               spec:"Uşaq Qidalanması",exp:"6 il", rat:"4.5",
+     about:"Prematur körpələrdə enteral/parenteral qidalanma, çəki artımı protokolları üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2014","Leipzig Üniversiteti – 2018"],
+     sched:{"Çərşənbə":"11:00–17:00","Cümə axşamı":"11:00–17:00"}},
+    {id:"dp3_4",e:"👩‍⚕️",name:"Dr. Aynur Musayeva",              spec:"Uşaq Qidalanması",exp:"5 il", rat:"4.4",
+     about:"Semptomatik qida gecikmə, yemək çeynəmə pozuntuları, orofaringial terapiya üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2015","Freiburg Üniversiteti – 2019"],
+     sched:{"Çərşənbə axşamı":"11:00–17:00","Şənbə":"10:00–14:00"}},
+    {id:"dp3_5",e:"👨‍⚕️",name:"Dr. Xəyal İsmayılov",             spec:"Uşaq Qidalanması",exp:"5 il", rat:"4.4",
+     about:"Piylənmə profilaktikası, uşaq metabolik sindromu, sağlam qidalanma mühiti üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2015","İstanbul Üniversiteti – 2019"],
+     sched:{"Bazar ertəsi":"11:00–17:00","Cümə":"11:00–16:00"}}
+  ],
+
+  /* ──────────────────── OFTALMOLOGİYA ──────────────────── */
+  g1:[
+    {id:"dg1_1",e:"👨‍⚕️",name:"Dr. Orxan Nəcəfov",              spec:"Ümumi Oftalmologiya",exp:"16 il",rat:"4.8",
+     about:"Retina xəstəlikləri, diabetik retinopatiya, glaukoma mütəxəssisi.",
+     edu:["Bakı DTU – 2004","Moorfields Eye Hospital – 2008","EBO – 2011"],
+     sched:{"Bazar ertəsi":"09:00–17:00","Çərşənbə":"09:00–17:00","Cümə":"09:00–13:00"}},
+    {id:"dg1_2",e:"👩‍⚕️",name:"Dr. Könül Əhmədova",             spec:"Ümumi Oftalmologiya",exp:"9 il", rat:"4.7",
+     about:"Uşaq oftalmologiyası əlavə ixtisası ilə refrakta problemlərinin müalicəsi.",
+     edu:["Bakı DTU – 2011","Graz Üniversiteti – 2015"],
+     sched:{"Çərşənbə axşamı":"10:00–18:00","Cümə axşamı":"10:00–18:00"}},
+    {id:"dg1_3",e:"👨‍⚕️",name:"Dr. Elvin Kərimov",              spec:"Ümumi Oftalmologiya",exp:"11 il",rat:"4.7",
+     about:"Katarakta cərrahiyyəsi, fakoemülsifikasiya texnikası üzrə yüksək ixtisaslıdır.",
+     edu:["Bakı DTU – 2009","Wien Universitätsklinikum – 2013"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Çərşənbə":"10:00–16:00"}},
+    {id:"dg1_4",e:"👩‍⚕️",name:"Dr. Aytən Babayeva",             spec:"Ümumi Oftalmologiya",exp:"8 il", rat:"4.6",
+     about:"Göz qarabağı xəstəlikləri, kornea transplantasiyası, oküler plastik cərrahiyyə üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","Leipzig Üniversiteti – 2016"],
+     sched:{"Çərşənbə axşamı":"09:00–15:00","Şənbə":"09:00–13:00"}},
+    {id:"dg1_5",e:"👨‍⚕️",name:"Dr. Tural Hüseynov",             spec:"Ümumi Oftalmologiya",exp:"7 il", rat:"4.5",
+     about:"Kseroftalmi, quru göz sindromu müalicəsi, göz damlası protokolları üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","Hannover MHH – 2017"],
+     sched:{"Çərşənbə":"11:00–18:00","Cümə":"11:00–16:00"}}
+  ],
+
+  g2:[
+    {id:"dg2_1",e:"👨‍⚕️",name:"Dr. Rauf Quliyev",               spec:"Lazer Cərrahiyyəsi",exp:"13 il",rat:"4.9",
+     about:"LASIK, PRK, LASEK prosedurlarının mütəxəssisi. 6000+ lazer əməliyyatı.",
+     edu:["Bakı DTU – 2007","Frankfurt Uni – 2011"],
+     sched:{"Bazar ertəsi":"08:00–14:00","Çərşənbə":"08:00–14:00"}},
+    {id:"dg2_2",e:"👩‍⚕️",name:"Dr. Leyla Nəcəfova",             spec:"Lazer Cərrahiyyəsi",exp:"9 il", rat:"4.7",
+     about:"SMILE lazer cərrahiyyəsi, qeyri-invaziv kornea ektazisi müalicəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2011","Wien AKH – 2015"],
+     sched:{"Çərşənbə axşamı":"09:00–15:00","Cümə axşamı":"09:00–15:00"}},
+    {id:"dg2_3",e:"👨‍⚕️",name:"Dr. Cavid Rəsulzadə",             spec:"Lazer Cərrahiyyəsi",exp:"8 il", rat:"4.6",
+     about:"Korneal kollagen krosslinkinq (CXL), keratokonus müalicəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","München LMU – 2016"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Cümə":"09:00–14:00"}},
+    {id:"dg2_4",e:"👩‍⚕️",name:"Dr. Şəbnəm Əliyeva",             spec:"Lazer Cərrahiyyəsi",exp:"7 il", rat:"4.5",
+     about:"Fotorefraktiv keratektomiya əməliyyatlarından sonra bərpa izləmə protokolları üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","Berlin Charité – 2017"],
+     sched:{"Çərşənbə":"11:00–17:00","Şənbə":"09:00–13:00"}},
+    {id:"dg2_5",e:"👨‍⚕️",name:"Dr. Fuad Musayev",               spec:"Lazer Cərrahiyyəsi",exp:"6 il", rat:"4.5",
+     about:"Femtosekund lazer katarakta cərrahiyyəsi, IOL hesablanması üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2014","Leipzig Üniversiteti – 2018"],
+     sched:{"Çərşənbə axşamı":"10:00–17:00","Cümə axşamı":"10:00–16:00"}}
+  ],
+
+  g3:[
+    {id:"dg3_1",e:"👩‍⚕️",name:"Dr. Şəbnəm Musayeva",            spec:"Uşaq Oftalmologiyası",exp:"10 il",rat:"4.8",
+     about:"Şaşılıq cərrahiyyəsi, ambliopi müalicəsi, uşaq miyopiya korreksiyası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2010","Zürich Kinderspital – 2014"],
+     sched:{"Çərşənbə axşamı":"09:00–15:00","Şənbə":"09:00–13:00"}},
+    {id:"dg3_2",e:"👨‍⚕️",name:"Dr. Fərid Quliyev",              spec:"Uşaq Oftalmologiyası",exp:"8 il", rat:"4.6",
+     about:"Doğuşdan sonra göz müayinəsi, neonatal retinopatiyanın müalicəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","Leipzig Üniversiteti – 2016"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Çərşənbə":"10:00–16:00"}},
+    {id:"dg3_3",e:"👩‍⚕️",name:"Dr. Nigar Kərimova",             spec:"Uşaq Oftalmologiyası",exp:"7 il", rat:"4.5",
+     about:"Uşaqlarda anadangəlmə katarakta, gloukoma diaqnostikası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","Freiburg Üniversiteti – 2017"],
+     sched:{"Çərşənbə axşamı":"10:00–17:00","Cümə":"10:00–15:00"}},
+    {id:"dg3_4",e:"👨‍⚕️",name:"Dr. Elvin Tahirov",              spec:"Uşaq Oftalmologiyası",exp:"6 il", rat:"4.5",
+     about:"Erkən yaşda miyopiya progressiyasını yavaşlatmaq üçün atropin terapiyası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2014","İstanbul Üniversiteti – 2018"],
+     sched:{"Çərşənbə":"11:00–18:00","Şənbə":"09:00–13:00"}},
+    {id:"dg3_5",e:"👩‍⚕️",name:"Dr. Günel Rəhimova",             spec:"Uşaq Oftalmologiyası",exp:"5 il", rat:"4.4",
+     about:"Uşaq görüşünün inkişafının monitorinqi, erkən müdaxilə proqramları üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2015","München LMU – 2019"],
+     sched:{"Bazar ertəsi":"11:00–17:00","Cümə axşamı":"11:00–16:00"}}
+  ],
+
+  /* ──────────────────── CƏRRAHİYYƏ ──────────────────── */
+  c1:[
+    {id:"dc1_1",e:"👨‍⚕️",name:"Prof. Dr. Sarvan Əliyev",        spec:"Ümumi Cərrahiyyə",exp:"27 il",rat:"5.0",
+     about:"Laparoskopik cərrahiyyənin Azərbaycanda öncülü. 5000+ minimal invaziv əməliyyat.",
+     edu:["Bakı DTU – 1993","Strasbourg, Endo Cərrahiyyə – 1997","EAES Fellow – 2001"],
+     sched:{"Çərşənbə axşamı":"08:00–13:00","Cümə axşamı":"08:00–13:00"}},
+    {id:"dc1_2",e:"👩‍⚕️",name:"Dr. Aida Hüseynzadə",            spec:"Ümumi Cərrahiyyə",exp:"11 il",rat:"4.7",
+     about:"Laparoskopik xoletsistektomiya, appendektomiya, hernia plastikasında ixtisaslıdır.",
+     edu:["Bakı DTU – 2009","Ankara Üniversiteti – 2013"],
+     sched:{"Bazar ertəsi":"09:00–16:00","Cümə":"09:00–14:00"}},
+    {id:"dc1_3",e:"👨‍⚕️",name:"Dr. Elman Rəsulov",              spec:"Ümumi Cərrahiyyə",exp:"13 il",rat:"4.8",
+     about:"Robota dəstəkli cərrahiyyə, da Vinci sistemi üzrə sertifikatlı operatordur.",
+     edu:["Bakı DTU – 2007","Hamburg UKE – 2011","da Vinci Sertifikatı – 2014"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Çərşənbə":"10:00–16:00"}},
+    {id:"dc1_4",e:"👩‍⚕️",name:"Dr. Türkan Quliyeva",            spec:"Ümumi Cərrahiyyə",exp:"9 il", rat:"4.6",
+     about:"Bariatrik cərrahiyyə, laparoskopik qastrektomiya, piylənmə əməliyyatları üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2011","München LMU – 2015"],
+     sched:{"Çərşənbə axşamı":"09:00–15:00","Şənbə":"09:00–13:00"}},
+    {id:"dc1_5",e:"👨‍⚕️",name:"Dr. Zaur Babazadə",              spec:"Ümumi Cərrahiyyə",exp:"8 il", rat:"4.6",
+     about:"Abdominal travma cərrahiyyəsi, qapalı zərər idarəetməsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","Berlin Charité – 2016"],
+     sched:{"Çərşənbə":"11:00–18:00","Cümə axşamı":"11:00–17:00"}}
+  ],
+
+  c2:[
+    {id:"dc2_1",e:"👨‍⚕️",name:"Dr. Namiq Tahirov",              spec:"Göğüs Cərrahiyyəsi",exp:"18 il",rat:"4.9",
+     about:"Ağciyər rezeksiyası, minimally invasive thorax cərrahiyyəsi üzrə mütəxəssis.",
+     edu:["Bakı DTU – 2002","Hannover Göğüs Cərrahiyyəsi – 2006"],
+     sched:{"Bazar ertəsi":"08:00–13:00","Çərşənbə":"08:00–13:00"}},
+    {id:"dc2_2",e:"👩‍⚕️",name:"Dr. Lalə Hüseynova",             spec:"Göğüs Cərrahiyyəsi",exp:"11 il",rat:"4.7",
+     about:"Video yardımlı torakoskopik cərrahiyyə (VATS), plevra xəstəlikləri üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2009","Wien AKH – 2013"],
+     sched:{"Çərşənbə axşamı":"09:00–14:00","Cümə axşamı":"09:00–14:00"}},
+    {id:"dc2_3",e:"👨‍⚕️",name:"Dr. Elçin Nəcəfov",              spec:"Göğüs Cərrahiyyəsi",exp:"12 il",rat:"4.8",
+     about:"Özofaqus xərçəngi cərrahiyyəsi, Ivor-Lewis əməliyyatı üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2008","Freiburg Üniversiteti – 2012"],
+     sched:{"Bazar ertəsi":"09:00–15:00","Çərşənbə":"09:00–15:00"}},
+    {id:"dc2_4",e:"👩‍⚕️",name:"Dr. Aynur Quliyeva",             spec:"Göğüs Cərrahiyyəsi",exp:"8 il", rat:"4.6",
+     about:"Mezoteliyoma, thymus xəstəlikləri, mediastinal şişlər cərrahiyyəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","Leipzig Üniversiteti – 2016"],
+     sched:{"Çərşənbə axşamı":"10:00–16:00","Şənbə":"09:00–13:00"}},
+    {id:"dc2_5",e:"👨‍⚕️",name:"Dr. Cavid Musayev",              spec:"Göğüs Cərrahiyyəsi",exp:"7 il", rat:"4.5",
+     about:"Erkən mərhələ ağciyər xərçəngi üçün sublobar rezeksiya, robota dəstəkli torakoskopiya.",
+     edu:["Bakı DTU – 2013","Berlin Charité – 2017"],
+     sched:{"Çərşənbə":"10:00–17:00","Cümə axşamı":"10:00–16:00"}}
+  ],
+
+  c3:[
+    {id:"dc3_1",e:"👩‍⚕️",name:"Dr. Leyla Cavadzadə",            spec:"Vaskulyar Cərrahiyyə",exp:"13 il",rat:"4.8",
+     about:"Aort anevrizmasi, karotid arteriya, varikoz damarlar müalicəsi üzrə mütəxəssis.",
+     edu:["Bakı DTU – 2007","Milano, Vaskulyar Cərrahiyyə – 2011"],
+     sched:{"Çərşənbə axşamı":"09:00–15:00","Cümə axşamı":"09:00–15:00"}},
+    {id:"dc3_2",e:"👨‍⚕️",name:"Dr. Fərid Əliyev",               spec:"Vaskulyar Cərrahiyyə",exp:"10 il",rat:"4.7",
+     about:"Endovaskulyar anevrizm bərpası (EVAR/TEVAR), stent-graft yerləşdirilməsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2010","Hamburg UKE – 2014"],
+     sched:{"Bazar ertəsi":"09:00–15:00","Çərşənbə":"09:00–15:00"}},
+    {id:"dc3_3",e:"👩‍⚕️",name:"Dr. Günel İsmayılova",           spec:"Vaskulyar Cərrahiyyə",exp:"9 il", rat:"4.6",
+     about:"Diabetik ayaq arteriya rekonstruksiyası, periferik damar bypass əməliyyatları üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2011","Wien Universitätsklinikum – 2015"],
+     sched:{"Çərşənbə axşamı":"10:00–16:00","Cümə":"10:00–15:00"}},
+    {id:"dc3_4",e:"👨‍⚕️",name:"Dr. Elvin Babazadə",             spec:"Vaskulyar Cərrahiyyə",exp:"7 il", rat:"4.5",
+     about:"Venoz çatışmazlıq, varikoz vena lazer obliterasiyası, skleroterapiya üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","Hannover MHH – 2017"],
+     sched:{"Çərşənbə":"11:00–17:00","Şənbə":"09:00–13:00"}},
+    {id:"dc3_5",e:"👩‍⚕️",name:"Dr. Xədicə Rəhimova",           spec:"Vaskulyar Cərrahiyyə",exp:"6 il", rat:"4.5",
+     about:"Tromboz, pulmonar embolizm profilaktikası, antikoaqulyasiya protokolları üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2014","München LMU – 2018"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Cümə axşamı":"10:00–15:00"}}
+  ],
+
+  /* ──────────────────── DERMATOLOGİYA ──────────────────── */
+  d1:[
+    {id:"dd1_1",e:"👩‍⚕️",name:"Dr. Xədicə Nəzərova",            spec:"Klinik Dermatologiya",exp:"14 il",rat:"4.8",
+     about:"Psoriaz, atopik dermatit, dəri xərçəngi erkən diaqnostikası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2006","Erlangen-Nürnberg – 2010"],
+     sched:{"Bazar ertəsi":"10:00–18:00","Cümə":"10:00–16:00"}},
+    {id:"dd1_2",e:"👨‍⚕️",name:"Dr. Emil Qəhrəmanov",             spec:"Klinik Dermatologiya",exp:"9 il", rat:"4.6",
+     about:"Allopesiya, vitiliqo, nail xəstəlikləri üzrə ixtisaslaşmışdır.",
+     edu:["Bakı DTU – 2011","Viyana Üniversiteti – 2015"],
+     sched:{"Çərşənbə axşamı":"11:00–18:00","Şənbə":"09:00–14:00"}},
+    {id:"dd1_3",e:"👩‍⚕️",name:"Dr. Lalə Musayeva",               spec:"Klinik Dermatologiya",exp:"11 il",rat:"4.7",
+     about:"Dəri xərçənginin dermoskopiya yolu ilə erkən müayinəsi, melanoma riski dəyərləndirməsi.",
+     edu:["Bakı DTU – 2009","Hamburg UKE – 2013"],
+     sched:{"Bazar ertəsi":"09:00–17:00","Çərşənbə":"09:00–15:00"}},
+    {id:"dd1_4",e:"👨‍⚕️",name:"Dr. Tural Babayev",               spec:"Klinik Dermatologiya",exp:"8 il", rat:"4.6",
+     about:"Akne, rozasea, piolodeşrit müalicəsi, antibiotik-sparing protokollar üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","Leipzig Üniversiteti – 2016"],
+     sched:{"Çərşənbə axşamı":"10:00–17:00","Cümə axşamı":"10:00–17:00"}},
+    {id:"dd1_5",e:"👩‍⚕️",name:"Dr. Günel Həsənova",              spec:"Klinik Dermatologiya",exp:"7 il", rat:"4.5",
+     about:"Uşaqlarda atopik ekzema, allergik kontakt dermatit müalicəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","Berlin Charité – 2017"],
+     sched:{"Çərşənbə":"11:00–18:00","Şənbə":"10:00–14:00"}}
+  ],
+
+  d2:[
+    {id:"dd2_1",e:"👩‍⚕️",name:"Dr. Samirə Fərəcova",             spec:"Kosmetik Dermatologiya",exp:"11 il",rat:"4.9",
+     about:"Botox, dermal doldurucular, kimyəvi peelinq, lazer dermatologiyası üzrə sertifikatlıdır.",
+     edu:["Bakı DTU – 2009","Estetik Tibb Sertifikatı, Paris – 2013"],
+     sched:{"Çərşənbə":"10:00–18:00","Cümə axşamı":"10:00–18:00"}},
+    {id:"dd2_2",e:"👨‍⚕️",name:"Dr. Elvin Nəcəfov",               spec:"Kosmetik Dermatologiya",exp:"8 il", rat:"4.6",
+     about:"Fraksiyon CO2 lazer, xray peelinq, melasma müalicəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","İstanbul Estetik Tibb – 2016"],
+     sched:{"Bazar ertəsi":"10:00–17:00","Cümə":"10:00–15:00"}},
+    {id:"dd2_3",e:"👩‍⚕️",name:"Dr. Nigar Əliyeva",               spec:"Kosmetik Dermatologiya",exp:"7 il", rat:"4.6",
+     about:"Thread lifting, biostimulasiya ineksiyaları, PRP terapiyası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","Wien Estetik Tibb – 2017"],
+     sched:{"Çərşənbə axşamı":"11:00–18:00","Şənbə":"10:00–14:00"}},
+    {id:"dd2_4",e:"👨‍⚕️",name:"Dr. Rauf Kərimov",                spec:"Kosmetik Dermatologiya",exp:"9 il", rat:"4.7",
+     about:"Kontur plastikası, dudak artırımı, yanaqlara doldurucular yerləşdirilməsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2011","München Estetik Tibb – 2015"],
+     sched:{"Çərşənbə":"09:00–16:00","Cümə axşamı":"09:00–16:00"}},
+    {id:"dd2_5",e:"👩‍⚕️",name:"Dr. Türkan Qasımova",             spec:"Kosmetik Dermatologiya",exp:"6 il", rat:"4.5",
+     about:"Cellulit müalicəsi, body shaping prosedurlar, karboks terapiyası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2014","Berlin Estetik Tibb – 2018"],
+     sched:{"Bazar ertəsi":"11:00–17:00","Şənbə":"10:00–14:00"}}
+  ],
+
+  d3:[
+    {id:"dd3_1",e:"👨‍⚕️",name:"Dr. Tərlan Süleymanov",           spec:"Trikologiya",exp:"8 il", rat:"4.7",
+     about:"Saç tökülməsinin diaqnostikası, PRP terapiya, FUE transplantasiya üzrə mütəxəssis.",
+     edu:["Bakı DTU – 2012","İstanbul FUE Akademiyası – 2016"],
+     sched:{"Bazar ertəsi":"09:00–16:00","Çərşənbə axşamı":"09:00–16:00"}},
+    {id:"dd3_2",e:"👩‍⚕️",name:"Dr. Nilufer Rəsulova",            spec:"Trikologiya",exp:"7 il", rat:"4.6",
+     about:"Qadınlarda androgen alopeçiya, telogen effluvium müalicəsi, saç sağlamlığı proqramları.",
+     edu:["Bakı DTU – 2013","Hamburg UKE – 2017"],
+     sched:{"Çərşənbə axşamı":"10:00–17:00","Cümə":"10:00–16:00"}},
+    {id:"dd3_3",e:"👨‍⚕️",name:"Dr. Elnur Babayev",               spec:"Trikologiya",exp:"6 il", rat:"4.5",
+     about:"Skalp mikrobiyom analizi, seborroik dermatit, folikulit müalicəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2014","Leipzig Üniversiteti – 2018"],
+     sched:{"Çərşənbə":"11:00–17:00","Şənbə":"09:00–14:00"}},
+    {id:"dd3_4",e:"👩‍⚕️",name:"Dr. Aytən Hüseynova",             spec:"Trikologiya",exp:"5 il", rat:"4.4",
+     about:"Trixoskopiya analizi, saç zərərliyi dərəcəsinin qiymətləndirilməsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2015","İstanbul Üniversiteti – 2019"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Cümə axşamı":"10:00–15:00"}},
+    {id:"dd3_5",e:"👨‍⚕️",name:"Dr. Vüsal Hüseynov",              spec:"Trikologiya",exp:"5 il", rat:"4.4",
+     about:"DHT blokerlər, mezoterapi ineksiyaları, LLLT (lazer) saç stimulyasiyası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2015","Freiburg Üniversiteti – 2019"],
+     sched:{"Çərşənbə axşamı":"11:00–18:00","Şənbə":"10:00–14:00"}}
+  ],
+
+  /* ──────────────────── ENDOKRİNOLOGİYA ──────────────────── */
+  e1:[
+    {id:"de1_1",e:"👩‍⚕️",name:"Prof. Dr. Məleykə Qurbanova",    spec:"Diabet Mərkəzi",exp:"21 il",rat:"5.0",
+     about:"Diabet texnologiyaları, insulin pompası, CGM idarəetməsinin Azərbaycandakı öncülü.",
+     edu:["Bakı DTU – 1999","Dresden Endokrinologiya – 2003","EASD Fellow – 2007"],
+     sched:{"Bazar ertəsi":"08:00–14:00","Çərşənbə":"08:00–14:00","Cümə":"08:00–12:00"}},
+    {id:"de1_2",e:"👨‍⚕️",name:"Dr. Rauf Əlizadə",               spec:"Diabet Mərkəzi",exp:"12 il",rat:"4.8",
+     about:"Diabetik ayaq sindromu, nefropatiya, retinopatiya multidisiplinar müalicəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2008","Bochum Ruhr Üniversiteti – 2012"],
+     sched:{"Çərşənbə axşamı":"09:00–17:00","Şənbə":"09:00–14:00"}},
+    {id:"de1_3",e:"👩‍⚕️",name:"Dr. Aynur Kərimova",              spec:"Diabet Mərkəzi",exp:"9 il", rat:"4.7",
+     about:"Gestasion diabet, hamiləlikdə qan şəkəri idarəetməsi, doğuşdan sonra metabolik izləmə.",
+     edu:["Bakı DTU – 2011","Leipzig Üniversiteti – 2015"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Cümə":"10:00–15:00"}},
+    {id:"de1_4",e:"👨‍⚕️",name:"Dr. Elşən Babazadə",              spec:"Diabet Mərkəzi",exp:"8 il", rat:"4.6",
+     about:"Tip 1 diabet, autoimmun pankreas xəstəlikləri, islet cell transplantasiyası.",
+     edu:["Bakı DTU – 2012","Wien AKH – 2016"],
+     sched:{"Çərşənbə axşamı":"10:00–17:00","Cümə axşamı":"10:00–17:00"}},
+    {id:"de1_5",e:"👩‍⚕️",name:"Dr. Nigar Musayeva",              spec:"Diabet Mərkəzi",exp:"7 il", rat:"4.6",
+     about:"Uşaqlarda diabet, pediatrik endokrinologiya əlavə ixtisası olan mütəxəssisdir.",
+     edu:["Bakı DTU – 2013","Hannover MHH – 2017"],
+     sched:{"Çərşənbə":"11:00–18:00","Şənbə":"10:00–14:00"}}
+  ],
+
+  e2:[
+    {id:"de2_1",e:"👩‍⚕️",name:"Dr. Nilufər Babayeva",            spec:"Qalxanabənzər Vəz",exp:"13 il",rat:"4.9",
+     about:"Tiroid xəstəliklərinin diaqnostikası, radyoiod terapiya planlaması üzrə mütəxəssis.",
+     edu:["Bakı DTU – 2007","Leipzig Üniversiteti – 2011"],
+     sched:{"Bazar ertəsi":"10:00–17:00","Cümə":"10:00–16:00"}},
+    {id:"de2_2",e:"👨‍⚕️",name:"Dr. Fərid Hüseynov",              spec:"Qalxanabənzər Vəz",exp:"10 il",rat:"4.7",
+     about:"Tiroid ultrasəs diaqnostikası, incə iynə biopsiyası, tiroid nodüllərin izlənməsi.",
+     edu:["Bakı DTU – 2010","Berlin Charité – 2014"],
+     sched:{"Çərşənbə axşamı":"09:00–15:00","Şənbə":"09:00–13:00"}},
+    {id:"de2_3",e:"👩‍⚕️",name:"Dr. Günel Nəcəfova",              spec:"Qalxanabənzər Vəz",exp:"8 il", rat:"4.6",
+     about:"Hashimoto tiroiditi, autoimmun tiroid xəstəliklərinin immun modulyasiyası üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2012","München LMU – 2016"],
+     sched:{"Bazar ertəsi":"11:00–17:00","Cümə axşamı":"11:00–16:00"}},
+    {id:"de2_4",e:"👨‍⚕️",name:"Dr. Elvin Quliyev",               spec:"Qalxanabənzər Vəz",exp:"7 il", rat:"4.5",
+     about:"Tiroid xərçənginin nüvə tibb üsulları ilə müşayiəti, tireoglobulin izlənməsi.",
+     edu:["Bakı DTU – 2013","Graz Karl-Franzens – 2017"],
+     sched:{"Çərşənbə":"10:00–17:00","Cümə":"10:00–15:00"}},
+    {id:"de2_5",e:"👩‍⚕️",name:"Dr. Türkan Rəhimova",             spec:"Qalxanabənzər Vəz",exp:"6 il", rat:"4.5",
+     about:"Hamiləlikdə tiroid disfunksiyası, subklinik hipotirozun idarəetməsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2014","İstanbul Üniversiteti – 2018"],
+     sched:{"Çərşənbə axşamı":"11:00–17:00","Şənbə":"10:00–14:00"}}
+  ],
+
+  e3:[
+    {id:"de3_1",e:"👨‍⚕️",name:"Dr. Elnur Məmmədzadə",            spec:"Hormonal Pozuntular",exp:"10 il",rat:"4.7",
+     about:"Hipofiz adenomaları, adrenal xəstəliklər, reproduktiv endokrinologiya üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2010","Graz Karl-Franzens – 2014"],
+     sched:{"Çərşənbə axşamı":"10:00–17:00","Cümə axşamı":"10:00–17:00"}},
+    {id:"de3_2",e:"👩‍⚕️",name:"Dr. Sevinc Babayeva",              spec:"Hormonal Pozuntular",exp:"9 il", rat:"4.6",
+     about:"Polisistik yumurtalıq sindromu (PCOS), androgen artıqlığı, hirsutizm müalicəsi üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2011","Leipzig Üniversiteti – 2015"],
+     sched:{"Bazar ertəsi":"10:00–16:00","Cümə":"10:00–15:00"}},
+    {id:"de3_3",e:"👨‍⚕️",name:"Dr. Ramil Qasımov",               spec:"Hormonal Pozuntular",exp:"8 il", rat:"4.6",
+     about:"Böyrəküstü vəz şişləri (feoxromositoma, Conn sindromu), adrenal insidentaloma izlənməsi.",
+     edu:["Bakı DTU – 2012","Berlin Charité – 2016"],
+     sched:{"Çərşənbə":"11:00–17:00","Cümə axşamı":"11:00–17:00"}},
+    {id:"de3_4",e:"👩‍⚕️",name:"Dr. Aytən Kərimova",              spec:"Hormonal Pozuntular",exp:"7 il", rat:"4.5",
+     about:"Osteoporoz, kalsium-fosfor metabolizm pozuntuları, D vitamini çatışmazlığı üzrə ixtisaslıdır.",
+     edu:["Bakı DTU – 2013","Hannover MHH – 2017"],
+     sched:{"Çərşənbə axşamı":"10:00–17:00","Şənbə":"09:00–13:00"}},
+    {id:"de3_5",e:"👨‍⚕️",name:"Dr. Orxan Rəsulzadə",             spec:"Hormonal Pozuntular",exp:"6 il", rat:"4.4",
+     about:"Kişilərdə hipogonadizm, testosteron əvəzetmə terapiyası, reproduktiv sağlamlıq.",
+     edu:["Bakı DTU – 2014","Wien AKH – 2018"],
+     sched:{"Bazar ertəsi":"11:00–17:00","Cümə":"11:00–16:00"}}
+  ]
+};
+
+/* ================================================================
+   REKLAM SLİDER
+================================================================ */
+let adIdx = 0;
+const slides = document.querySelectorAll('.ad-slide');
+const dotsEl = document.getElementById('adDots');
+let adTimer;
+
+// Nöqtələri yarat
+slides.forEach((_, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'ad-dot' + (i === 0 ? ' on' : '');
+  dot.onclick = () => goAd(i);
+  dotsEl.appendChild(dot);
+});
+
+function goAd(i) {
+  slides[adIdx].classList.remove('active');
+  dotsEl.children[adIdx].classList.remove('on');
+  adIdx = (i + slides.length) % slides.length;
+  slides[adIdx].classList.add('active');
+  dotsEl.children[adIdx].classList.add('on');
+  clearInterval(adTimer);
+  adTimer = setInterval(() => goAd(adIdx + 1), 5000);
+}
+
+function adNav(dir) { goAd(adIdx + dir); }
+adTimer = setInterval(() => goAd(adIdx + 1), 5000);
+
+/* ================================================================
+   STATE
+================================================================ */
+let curDoc = null, curStar = 0, normalCtr = 11;
+let usedPrioNums = new Set();
+let _list = [];
+
+/* ================================================================
+   BÖLMƏ GÖRÜNÜRLÜKLƏRİ
+================================================================ */
+function show(n) {
+  const el = document.getElementById('s' + n);
+  el.classList.add('on');
+  setTimeout(() => el.scrollIntoView({ behavior:'smooth', block:'start' }), 60);
+}
+function hide(n) { document.getElementById('s' + n).classList.remove('on'); }
+
+function goBack(n) {
+  if (n === 2) { hide(2); hide(3); hide(4); hide(5); hide(6); document.getElementById('s1').scrollIntoView({ behavior:'smooth' }); }
+  if (n === 3) { hide(3); hide(4); hide(5); hide(6); show(2); }
+  if (n === 4) { hide(4); hide(5); hide(6); show(3); }
+  if (n === 5) { hide(5); hide(6); show(4); }
+}
+
+/* ================================================================
+   BÖLMƏ 1 → 2
+================================================================ */
+function pickDept(btn, key) {
+  document.querySelectorAll('.dbtn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  const d = DEPTS[key];
+  document.getElementById('deptTitle').textContent = d.icon + ' ' + d.name + ' Şöbəsi';
+  document.getElementById('deptGrid').innerHTML = d.sub.map(s => `
+    <div class="dept-card" onclick="pickSub(this,'${s.id}','${esc(s.name)}')">
+      <span class="di">${s.icon}</span>
+      <h3>${s.name}</h3>
+      <p>${s.desc}</p>
+    </div>`).join('');
+  show(2); hide(3); hide(4); hide(5); hide(6);
+}
+
+/* ================================================================
+   BÖLMƏ 2 → 3
+================================================================ */
+function pickSub(card, subId, subName) {
+  document.querySelectorAll('.dept-card').forEach(c => c.classList.remove('sel'));
+  card.classList.add('sel');
+  const list = DOCS[subId] || [];
+  _list = list;
+  document.getElementById('docTitle').textContent = subName + ' — Həkimlər';
+  document.getElementById('docGrid').innerHTML = list.length === 0
+    ? `<p style="color:var(--muted);grid-column:1/-1;text-align:center;padding:40px">Həkim məlumatı əlavə edilir.</p>`
+    : list.map(d => `
+      <div class="doc-card" onclick="pickDoc('${d.id}')">
+        <div class="doc-ava">${d.e}</div>
+        <div class="doc-info">
+          <h3>${d.name}</h3>
+          <p class="sp">${d.spec}</p>
+          <p class="ex">🕐 ${d.exp} &nbsp;•&nbsp; ⭐ ${d.rat}</p>
+        </div>
+      </div>`).join('');
+  show(3); hide(4); hide(5); hide(6);
+}
+
+/* ================================================================
+   BÖLMƏ 3 → 4
+================================================================ */
+function pickDoc(docId) {
+  document.querySelectorAll('.doc-card').forEach(c => c.classList.remove('sel'));
+  const d = _list.find(x => x.id === docId);
+  if (!d) return;
+  curDoc = d;
+
+  const schedH = Object.entries(d.sched).map(([g, s]) =>
+    `<div class="pstat"><span>${g}</span><strong>${s}</strong></div>`).join('');
+
+  const eduH = d.edu.map(e => {
+    const p = e.split('–');
+    return `<div class="edu-row"><div class="edu-dot"></div><div>
+      <h4>${p[0].trim()}</h4>
+      <span>${p[1] ? '– ' + p[1].trim() : ''}</span>
+    </div></div>`;
+  }).join('');
+
+  document.getElementById('profWrap').innerHTML = `
+    <div class="prof-l">
+      <span class="prof-ava">${d.e}</span>
+      <h2>${d.name}</h2>
+      <span class="spec-badge">${d.spec}</span>
+      <div class="pstat"><span>Təcrübə</span><strong>${d.exp}</strong></div>
+      <div class="pstat"><span>Reytinq</span><strong>⭐ ${d.rat}/5</strong></div>
+      <div class="pstat"><span>Dil</span><strong>AZ · RU · EN</strong></div>
+      ${schedH}
+    </div>
+    <div class="prof-r">
+      <h3>Həkim haqqında</h3>
+      <p>${d.about}</p>
+      <h3 style="font-size:20px;margin-bottom:11px">Təhsil &amp; Sertifikatlar</h3>
+      ${eduH}
+      <button class="pick-btn" onclick="goQueue()">📅 Bu həkimlə növbə al →</button>
+    </div>`;
+
+  show(4); hide(5); hide(6);
+}
+
+/* ================================================================
+   BÖLMƏ 4 → 5
+================================================================ */
+function goQueue() {
+  if (!curDoc) return;
+
+  document.getElementById('schedSlots').innerHTML =
+    Object.entries(curDoc.sched).map(([g, s]) => `
+      <div class="tslot">
+        <span class="tday">${g}</span>
+        <span class="ttime">${s}</span>
+        <span class="tbadge t-open">✅ Açıq</span>
+      </div>`).join('');
+
+  // Formu sıfırla
+  ['fSerial','fFin','fName','fPhone','fDay','fMonth','fYear','fNote','fGaziS','fShehidS']
+    .forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.classList.remove('err'); } });
+
+  document.getElementById('cbGazi').checked   = false;
+  document.getElementById('cbShehid').checked = false;
+  document.getElementById('gaziField').style.display   = 'none';
+  document.getElementById('shehidField').style.display = 'none';
+  document.getElementById('qResult').classList.remove('show');
+  document.getElementById('subBtn').style.display = 'flex';
+  document.querySelectorAll('.emsg').forEach(e => e.textContent = '');
+
+  show(5); hide(6);
+}
+
+/* ================================================================
+   FİLTRLƏR — Real vaxt
+================================================================ */
+function onlyLetters(inp) {
+  inp.value = inp.value.replace(/[^a-zA-ZƏəĞğİiÖöÜüŞşÇç\s\-]/g, '');
+}
+function onlyDigits(inp) {
+  inp.value = inp.value.replace(/\D/g, '');
+}
+function onlyUpperDigits(inp) {
+  inp.value = inp.value.replace(/[^A-Z0-9]/g, '').toUpperCase();
+}
+
+/* ================================================================
+   VALİDASİYA
+================================================================ */
+function clrErr(id) {
+  const m = document.getElementById('e-' + id);
+  const i = document.getElementById(id);
+  if (m) m.textContent = '';
+  if (i) i.classList.remove('err');
+}
+function setErr(id, msg) {
+  const m = document.getElementById('e-' + id);
+  const i = document.getElementById(id);
+  if (m) m.textContent = msg;
+  if (i) i.classList.add('err');
+}
+
+function validate() {
+  let ok = true;
+
+  const serial = document.getElementById('fSerial').value.trim();
+  if (!/^[A-Z0-9]{10}$/.test(serial)) { setErr('fSerial', '❌ Seriya nömrəsi 10 simvol olmalı, yalnız böyük hərf və rəqəm.'); ok = false; }
+
+  const fin = document.getElementById('fFin').value.trim();
+  if (!/^[A-Z0-9]{7}$/.test(fin)) { setErr('fFin', '❌ FİN kod 7 simvol olmalı, yalnız böyük hərf və rəqəm.'); ok = false; }
+
+  const name = document.getElementById('fName').value.trim();
+  if (name.length < 3 || /\d/.test(name)) { setErr('fName', '❌ Ad Soyad yalnız hərflərdən ibarət olmalıdır (ən az 3 hərf).'); ok = false; }
+
+  const phone = document.getElementById('fPhone').value.trim();
+  if (!/^\d{7,10}$/.test(phone)) { setErr('fPhone', '❌ Telefon yalnız rəqəm olmalıdır (7–10 rəqəm).'); ok = false; }
+
+  const note = document.getElementById('fNote').value.trim();
+  if (!note) { setErr('fNote', '❌ Zəhmət olmasa şikayət/qeyd sahəsini doldurun.'); ok = false; }
+
+  const day = document.getElementById('fDay').value.trim();
+  if (!/^\d{1,2}$/.test(day) || +day < 1 || +day > 31) { setErr('fDay', '❌ Gün: 1–31 arası rəqəm.'); ok = false; }
+
+  const month = document.getElementById('fMonth').value.trim();
+  if (!/^\d{1,2}$/.test(month) || +month < 1 || +month > 12) { setErr('fMonth', '❌ Ay: 1–12 arası rəqəm.'); ok = false; }
+
+  const year = document.getElementById('fYear').value.trim();
+  const cy = new Date().getFullYear();
+  if (!/^\d{4}$/.test(year) || +year < 1900 || +year > cy) { setErr('fYear', `❌ 4 rəqəmli il (1900–${cy}).`); ok = false; }
+
+  if (document.getElementById('cbGazi').checked) {
+    const gs = document.getElementById('fGaziS').value.trim();
+    if (!/^\d{7}$/.test(gs)) { setErr('fGaziS', '❌ Qazi vəsiqəsi seriya nömrəsi 7 rəqəm olmalıdır.'); ok = false; }
+  }
+
+  if (document.getElementById('cbShehid').checked) {
+    const ss = document.getElementById('fShehidS').value.trim();
+    if (!/^\d{7}$/.test(ss)) { setErr('fShehidS', '❌ Şəhid ailə vəsiqəsi seriyası 7 rəqəm olmalıdır.'); ok = false; }
+  }
+
+  if (!ok) {
+    alert('Zəhmət olmasa boş sahələri doldurun və səhvləri düzəldin.');
+  }
+
+  return ok;
+}
+
+/* ================================================================
+   NÖVBƏ
+================================================================ */
+function togglePrio(t) {
+  const fid = t === 'gazi' ? 'gaziField' : 'shehidField';
+  const cid = t === 'gazi' ? 'cbGazi'    : 'cbShehid';
+  document.getElementById(fid).style.display = document.getElementById(cid).checked ? 'block' : 'none';
+}
+
+function submitQ() {
+  if (!validate()) return;
+  const isG = document.getElementById('cbGazi').checked;
+  const isS = document.getElementById('cbShehid').checked;
+  const pri = isG || isS;
+  let num;
+  if (pri) {
+    let nextPrio = 1;
+    while (usedPrioNums.has(nextPrio) && nextPrio <= 10) nextPrio++;
+    if (nextPrio <= 10) {
+      usedPrioNums.add(nextPrio);
+      num = '#' + String(nextPrio).padStart(3,'0');
+    } else {
+      num = '#' + String(normalCtr).padStart(3,'0');
+      normalCtr++;
+    }
+  } else {
+    num = '#' + String(normalCtr).padStart(3,'0');
+    normalCtr++;
+  }
+  const lbl = (isG && isS) ? '⭐ Prioritet növbə — Qazi və Şəhid ailəsi' : isG ? '⭐ Prioritet növbə — Qazi' : isS ? '⭐ Prioritet növbə — Şəhid ailəsi' : 'Növbə nömrəniz • ' + (curDoc ? curDoc.name : '');
+  document.getElementById('qNum').textContent  = num;
+  document.getElementById('qMsg').textContent  = lbl;
+  document.getElementById('qResult').classList.add('show');
+  document.getElementById('subBtn').style.display = 'none';
+  setTimeout(() => show(6), 2200);
+}
+
+/* ================================================================
+   RƏY & ŞİKAYƏT
+================================================================ */
+function setStar(n) {
+  curStar = n;
+  document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('on', i < n));
+}
+function setFT(t) {
+  document.getElementById('posBtn').className = 'ftype-btn pos-btn' + (t === 'pos' ? ' active-pos' : '');
+  document.getElementById('negBtn').className = 'ftype-btn neg-btn' + (t === 'neg' ? ' active-neg' : '');
+}
+function submitRev() {
+  if (!document.getElementById('revText').value.trim()) { alert('Zəhmət olmasa rəyinizi yazın.'); return; }
+  document.getElementById('revText').value = '';
+  document.getElementById('revName').value = '';
+  document.getElementById('revOk').classList.add('show');
+  setStar(0);
+}
+function submitComp() {
+  const phone = document.getElementById('compPhone').value.trim();
+  const complaint = document.getElementById('compText').value.trim();
+  
+  if (!complaint) { alert('Zəhmət olmasa şikayətinizi yazın.'); return; }
+  
+  if (!phone) { alert('Zəhmət olmasa əlaqə nömrəsini daxil edin.'); return; }
+  
+  if (!/^\d+$/.test(phone)) { alert('Əlaqə nömrəsi sadəcə rəqəm içərməlidir.'); return; }
+  
+  if (phone.length > 10) { alert('Əlaqə nömrəsi ən çox 10 rəqəm olmalıdır.'); return; }
+  
+  if (phone.length < 7) { alert('Əlaqə nömrəsi ən az 7 rəqəm olmalıdır.'); return; }
+  
+  document.getElementById('compText').value  = '';
+  document.getElementById('compName').value  = '';
+  document.getElementById('compPhone').value = '';
+  document.getElementById('compOk').classList.add('show');
+}
+
+/* ================================================================
+   KÖMƏKÇI
+================================================================ */
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* İlkin init */
+setFT('pos');
+
+</script>
+</body>
+</html>
